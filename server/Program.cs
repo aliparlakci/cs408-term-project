@@ -14,13 +14,15 @@ namespace server
         [STAThread]
         static void Main()
         {
-            var db = new Database();
+            var usersDb = new UserDatabase();
+            var postsDb = new PostsDatabase();
             var logger = new Logger();
-            var server = new Server(db, logger);
+            var server = new Server(usersDb, postsDb, logger);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ServerForm(server, logger));
+
         }
     }
 }

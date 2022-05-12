@@ -11,7 +11,8 @@ namespace server
 {
     public class Server : IDisposable
     {
-        private Database _db;
+        private UserDatabase _userDb;
+        private PostsDatabase _postDb;
         private Logger _logger;
 
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -20,9 +21,9 @@ namespace server
         bool terminating = false;
         bool listening = false;
 
-        public Server(Database db, Logger logger)
+        public Server(UserDatabase userDb, PostsDatabase _postDb, Logger logger)
         {
-            _db = db;
+            _userDb = userDb;
             _logger = logger;
         }
 
@@ -107,9 +108,9 @@ namespace server
                         message = message.Substring(0, message.IndexOf('\0'));
 
                         var user = CayGetirProtocol.ParseUser(message);
-                        if (!_db.Exists(user.Username))
+                        if (!_userDb.Exists((item) => item.Username == user.Username))
                         {
-                            _db.InsertUser(user);
+                            _userDb.InsertItem(user);
                             _logger.Write($"{user.Username} has created an account!\n");
                             var response = CayGetirProtocol.Message("You have created a new account!");
                             Send(client, response);

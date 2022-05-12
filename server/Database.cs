@@ -8,49 +8,31 @@ using System.Threading.Tasks;
 
 namespace server
 {
-    public class Database
+    public abstract class Database<T>
     {
-        private readonly string filename = "database.txt";
-        private IEnumerable<User> users;
+        protected string filename = "database.txt";
+        protected IEnumerable<T> items;
 
         public Database()
         {
-            users = new List<User>();
+            items = new List<T>();
 
             if (!File.Exists(filename))
             {
                 File.Create(filename).Dispose();
             }
+
+            ReadFile();
         }
 
-        public bool Exists(string username)
+        public bool Exists(Func<T, bool> comparator)
         {
             ReadFile();
-            return users.Where(user => user.Username == username).ToArray().Length > 0;
+            return items.Where(item => comparator(item)).ToArray().Length > 0;
         }
 
-        public void InsertUser(User user)
-        {
-            using (var file = File.AppendText(filename))
-            {
-                file.WriteLine($"username={user.Username}&name={user.Name}&surname={user.Surname}&password={user.Password}");
-            }
-        }
+        public virtual void InsertItem(T item) { }
 
-        private void ReadFile()
-        {
-            users = File.ReadAllLines(filename).Select(line =>
-            {
-                var re = new Regex("username=(.*)&name=(.*)&surname=(.*)&password=(.*)");
-                var groups = re.Matches(line);
-                return new User
-                {
-                    Username = groups[0].Groups[1].Value,
-                    Name = groups[0].Groups[2].Value,
-                    Surname = groups[0].Groups[3].Value,
-                    Password = groups[0].Groups[4].Value,
-                };
-            });
-        }
+        protected virtual void ReadFile() { }
     }
 }
