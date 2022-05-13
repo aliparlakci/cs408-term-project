@@ -11,7 +11,7 @@ namespace server
 {
     public class Server : IDisposable
     {
-        private UserDatabase _userDb;
+        private UsersDatabase _userDb;
         private PostsDatabase _postDb;
         private Logger _logger;
 
@@ -21,7 +21,7 @@ namespace server
         bool terminating = false;
         bool listening = false;
 
-        public Server(UserDatabase userDb, PostsDatabase _postDb, Logger logger)
+        public Server(UsersDatabase userDb, PostsDatabase _postDb, Logger logger)
         {
             _userDb = userDb;
             _logger = logger;

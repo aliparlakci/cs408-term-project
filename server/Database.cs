@@ -10,11 +10,13 @@ namespace server
 {
     public abstract class Database<T>
     {
-        protected string filename = "database.txt";
+        protected string _filename = "database.txt";
         protected IEnumerable<T> items;
 
-        public Database()
+        public Database(string filename)
         {
+            _filename = filename;
+
             items = new List<T>();
 
             if (!File.Exists(filename))

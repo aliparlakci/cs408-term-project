@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace server
 {
-    public class UserDatabase : Database<User>
+    public class UsersDatabase : Database<User>
     {
+        public UsersDatabase(string filename) : base(filename) { }
+
         public override void InsertItem(User user)
         {
-            using (var file = File.AppendText(filename))
+            using (var file = File.AppendText(_filename))
             {
                 file.WriteLine($"username={user.Username}&name={user.Name}&surname={user.Surname}&password={user.Password}");
             }   
@@ -20,7 +22,7 @@ namespace server
 
         protected override void ReadFile()
         {
-            items = File.ReadAllLines(filename).Select(line =>
+            items = File.ReadAllLines(_filename).Select(line =>
             {
                 var re = new Regex("username=(.*)&name=(.*)&surname=(.*)&password=(.*)");
                 var groups = re.Matches(line);
