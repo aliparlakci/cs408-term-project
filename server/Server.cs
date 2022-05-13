@@ -110,7 +110,7 @@ namespace server
                         var user = CayGetirProtocol.ParseUser(message);
                         if (!_userDb.Exists((item) => item.Username == user.Username))
                         {
-                            _userDb.InsertItem(user);
+                            _userDb.InsertUser(user);
                             _logger.Write($"{user.Username} has created an account!\n");
                             var response = CayGetirProtocol.Message("You have created a new account!");
                             Send(client, response);

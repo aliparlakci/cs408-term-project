@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace server
 {
-    public abstract class Database<T>
+    public abstract class Database<T> : IDisposable
     {
         protected string _filename = "database.txt";
-        protected IEnumerable<T> items;
+        protected List<T> items;
 
         public Database(string filename)
         {
@@ -27,14 +28,34 @@ namespace server
             ReadFile();
         }
 
+        protected void WriteToFile()
+        {
+            var lines = items.Select(item => JsonConvert.SerializeObject(item));
+            File.WriteAllLines(_filename, lines);
+        }
+
         public bool Exists(Func<T, bool> comparator)
         {
-            ReadFile();
             return items.Where(item => comparator(item)).ToArray().Length > 0;
         }
 
-        public virtual void InsertItem(T item) { }
+        protected void InsertItem(T item)
+        {
+            items.Add(item);
+            WriteToFile();
+        }
 
-        protected virtual void ReadFile() { }
+        protected void ReadFile()
+        {
+            items = File.ReadAllLines(_filename).Select(line =>
+            {
+                return JsonConvert.DeserializeObject<T>(line);
+            }).ToList();
+        }
+
+        public void Dispose()
+        {
+            WriteToFile();
+        }
     }
 }
