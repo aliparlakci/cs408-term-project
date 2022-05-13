@@ -11,7 +11,7 @@ namespace server
 {
     public abstract class Database<T> : IDisposable
     {
-        protected string _filename = "database.txt";
+        protected string _filename = "user-db.txt";
         protected List<T> items;
 
         public Database(string filename)

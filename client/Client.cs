@@ -43,13 +43,16 @@ namespace client
 
         public void SetTerminating() { terminating = true; }
 
-        public bool Connect(string ip, int port)
+        public bool Connect(string ip, int port, string username)
         {
             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
                 clientSocket.Connect(ip, port);
+                var message = CayGetirProtocol.Login(username);
+                Send(message);
+
                 connected = true;
 
                 Thread receiveThread = new Thread(receive);
@@ -118,6 +121,17 @@ namespace client
                 }
 
                 _logger.Write($"{message}\n");
+            }
+
+            if(type == MessageType.Posts)
+            {
+                var posts = CayGetirProtocol.ParsePosts(incomingMessage);
+
+                _logger.Write("Showing all posts from clients:\n");
+                foreach(var post in posts)
+                {
+                    _logger.Write($"");
+                }
             }
         }
 

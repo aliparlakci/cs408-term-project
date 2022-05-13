@@ -73,7 +73,28 @@ namespace server
                 try
                 {
                     Socket newClient = serverSocket.Accept();
-                    clientSockets.Add(newClient);
+                    Byte[] buffer = new Byte[1024];
+                    if (newClient.Receive(buffer) > 0)
+                    {
+                        string message = Encoding.Default.GetString(buffer);
+                        message = message.Substring(0, message.IndexOf('\0'));
+                        var username = CayGetirProtocol.ParseUserName(message);
+
+                        if (!_userDb.Exists((item) => item == username))
+                        {
+                            _logger.Write($"{username} tried to connect to the server but cannot\n");
+                            var response = CayGetirProtocol.Error("Please enter a valid username!");
+                            Send(newClient, response);
+                            //burada connect olamadığı için throw error yapıcaz bence ama burayı sana bıraktık :))
+                        }
+                        else
+                        {
+                            _logger.Write($"{username} has connected\n");
+                            var response = CayGetirProtocol.Message($"Hello {username}! You are connected to the server.");
+                            Send(newClient, response);
+                        }
+                    }
+                        clientSockets.Add(newClient);
                     _logger.Write("A client is connected.\n");
 
                     Thread receiveThread = new Thread(() => receive(newClient));
@@ -107,20 +128,20 @@ namespace server
                         string message = Encoding.Default.GetString(buffer);
                         message = message.Substring(0, message.IndexOf('\0'));
 
-                        var user = CayGetirProtocol.ParseUser(message);
-                        if (!_userDb.Exists((item) => item.Username == user.Username))
-                        {
-                            _userDb.InsertUser(user);
-                            _logger.Write($"{user.Username} has created an account!\n");
-                            var response = CayGetirProtocol.Message("You have created a new account!");
-                            Send(client, response);
-                        }
-                        else
-                        {
-                            _logger.Write($"An account with the username {user.Username} already exists!\n");
-                            var response = CayGetirProtocol.Error("There is already an account with this username!");
-                            Send(client, response);
-                        }
+                        //var user = CayGetirProtocol.ParseUser(message);
+                        //if (!_userDb.Exists((item) => item.Username == user.Username))
+                        //{
+                        //    _userDb.InsertUser(user);
+                        //    _logger.Write($"{user.Username} has created an account!\n");
+                        //    var response = CayGetirProtocol.Message("You have created a new account!");
+                        //    Send(client, response);
+                        //}
+                        //else
+                        //{
+                        //    _logger.Write($"An account with the username {user.Username} already exists!\n");
+                        //    var response = CayGetirProtocol.Error("There is already an account with this username!");
+                        //    Send(client, response);
+                        //}
                     }
                 }
                 catch (SocketException ex)

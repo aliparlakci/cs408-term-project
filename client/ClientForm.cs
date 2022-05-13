@@ -42,27 +42,27 @@ namespace client
 
         private void ClearInputs()
         {
-            nameInput.Clear();
-            surnameInput.Clear();
+            //nameInput.Clear();
+            //surnameInput.Clear();
             userNameInput.Clear();
-            passwordInput.Clear();
+            //passwordInput.Clear();
         }
 
         private bool VerifyInputs()
         {
             bool flag = true;
 
-            if (nameInput.Text == "")
-            {
-                _logger.Write("Please enter a name\n");
-                flag = false;
-            }
+            //if (nameInput.Text == "")
+            //{
+            //    _logger.Write("Please enter a name\n");
+            //    flag = false;
+            //}
 
-            if (surnameInput.Text == "")
-            {
-                _logger.Write("Please enter a surname\n");
-                flag = false;
-            }
+            //if (surnameinput.text == "")
+            //{
+            //    _logger.write("please enter a surname\n");
+            //    flag = false;
+            //}
 
             if (userNameInput.Text == "")
             {
@@ -70,11 +70,11 @@ namespace client
                 flag = false;
             }
 
-            if (passwordInput.Text == "")
-            {
-                _logger.Write("Please enter a password\n");
-                flag = false;
-            }
+            //if (passwordInput.Text == "")
+            //{
+            //    _logger.Write("Please enter a password\n");
+            //    flag = false;
+            //}
 
             return flag;
         }
@@ -88,8 +88,9 @@ namespace client
 
             if (Int32.TryParse(portInput.Text, out serverPort))
             {
-                if (_client.Connect(ip.Trim(), serverPort))
+                if (_client.Connect(ip.Trim(), serverPort, userNameInput.Text))
                 {
+
                     logBox.Enabled = true;
 
                     _logger.Write($"You are connected!\n");
@@ -128,8 +129,9 @@ namespace client
                 return;
             }
 
-            var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
-            _client.Send(message);
+            //var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
+            //_client.Send(message);
+
         }
     }
 }

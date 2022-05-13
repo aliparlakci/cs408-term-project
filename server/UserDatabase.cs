@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace server
 {
-    public class UsersDatabase : Database<User>
+    public class UsersDatabase : Database<String>
     {
         public UsersDatabase(string filename) : base(filename) { }
 
-        public void InsertUser(User user)
-        {
-            base.InsertItem(user);
-        }
+        //public void InsertUser(User user)
+        //{
+        //    base.InsertItem(user);
+        //}
     }
 }

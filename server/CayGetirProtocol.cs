@@ -20,17 +20,22 @@ namespace server
             return $"Cay Getir 1.0\ntype=error\nmessage={message}";
         }
 
-        public static string Login(string name, string surname, string username, string password)
+        public static string Signup(string name, string surname, string username, string password)
         {
             return $"Cay Getir 1.0\ntype=signup\nname={name}\nsurname={surname}\nusername={username}\npassword={password}";
         }
 
-        public static string NewPost(string name, string surname, string username, string password)
+        public static string Login(string username)
         {
-            return $"Cay Getir 1.0\ntype=signup\nname={name}\nsurname={surname}\nusername={username}\npassword={password}\n";
+            return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string Posts(Post[] posts)
+        public static string NewPost(string id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
+        {
+            return $"Cay Getir 1.0\ntype=newpost\nid={id}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
+        }
+
+        public static string Posts(IEnumerable<Post> posts)
         {
             var str = $"Cay Getir 1.0\ntype=posts\n";
 
@@ -45,7 +50,7 @@ namespace server
         public static MessageType DetermineType(string message)
         {
             var lines = message.Split(new char[] { '\n' });
-            var type = lines[1].Substring(6);
+            var type = lines[1].Substring(5);
             
             if (type == "message")
             {
@@ -55,6 +60,16 @@ namespace server
             if (type == "signup")
             {
                 return MessageType.Signup;
+            }
+
+            if (type == "login")
+            {
+                return MessageType.Login;
+            }
+
+            if (type == "newpost")
+            {
+                return MessageType.NewPost;
             }
 
             if (type == "posts")
@@ -83,6 +98,26 @@ namespace server
             return user;
         }
 
+        public static string ParseUserName(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            return lines[2].Substring(9);
+        }
+
+        public static Post ParseNewPost(string message)
+        {
+            var post = new Post();
+            var lines = message.Split(new char[] { '\n' });
+
+            post.Id = Int32.Parse(lines[2].Substring(3));
+            post.Username = lines[3].Substring(9);
+            post.Body = lines[4].Substring(5);
+            post.CreatedAt = DateTime.Parse(lines[5].Substring(10));
+
+            return post;
+        }
+
         public static string ParseMessage(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -90,7 +125,7 @@ namespace server
             return lines[2].Substring(8);
         }
 
-        public static List<Post> ParsePosts(string message)
+        public static IEnumerable<Post> ParsePosts(string message)
         {
             var lines = message.Split(new char[] { '\n' });
 
@@ -124,7 +159,9 @@ namespace server
     {
         Message,
         Signup,
+        Login,
         Error,
+        NewPost,
         Posts
     }
 }
