@@ -41,8 +41,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.createUserButton = new System.Windows.Forms.Button();
             this.newPostBox = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.requestPostButton = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.connectBox.SuspendLayout();
             this.newPostBox.SuspendLayout();
             this.SuspendLayout();
@@ -129,14 +129,15 @@
             this.logBox.Location = new System.Drawing.Point(207, 12);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
-            this.logBox.Size = new System.Drawing.Size(631, 445);
+            this.logBox.Size = new System.Drawing.Size(446, 363);
             this.logBox.TabIndex = 2;
             this.logBox.Text = "";
             // 
             // disconnectButton
             // 
             this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.disconnectButton.Location = new System.Drawing.Point(763, 463);
+            this.disconnectButton.Enabled = false;
+            this.disconnectButton.Location = new System.Drawing.Point(578, 381);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(75, 23);
             this.disconnectButton.TabIndex = 3;
@@ -152,10 +153,11 @@
             this.label3.Size = new System.Drawing.Size(28, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Post";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // createUserButton
             // 
-            this.createUserButton.Location = new System.Drawing.Point(9, 124);
+            this.createUserButton.Location = new System.Drawing.Point(6, 162);
             this.createUserButton.Name = "createUserButton";
             this.createUserButton.Size = new System.Drawing.Size(167, 23);
             this.createUserButton.TabIndex = 2;
@@ -165,16 +167,27 @@
             // 
             // newPostBox
             // 
+            this.newPostBox.Controls.Add(this.requestPostButton);
             this.newPostBox.Controls.Add(this.richTextBox1);
             this.newPostBox.Controls.Add(this.createUserButton);
             this.newPostBox.Controls.Add(this.label3);
-            this.newPostBox.Location = new System.Drawing.Point(12, 193);
+            this.newPostBox.Location = new System.Drawing.Point(12, 151);
             this.newPostBox.Name = "newPostBox";
-            this.newPostBox.Size = new System.Drawing.Size(189, 169);
+            this.newPostBox.Size = new System.Drawing.Size(189, 220);
             this.newPostBox.TabIndex = 1;
             this.newPostBox.TabStop = false;
             this.newPostBox.Text = "Create Post";
             this.newPostBox.Visible = false;
+            // 
+            // requestPostButton
+            // 
+            this.requestPostButton.Location = new System.Drawing.Point(6, 191);
+            this.requestPostButton.Name = "requestPostButton";
+            this.requestPostButton.Size = new System.Drawing.Size(167, 23);
+            this.requestPostButton.TabIndex = 4;
+            this.requestPostButton.Text = "Request Posts";
+            this.requestPostButton.UseVisualStyleBackColor = true;
+            this.requestPostButton.Click += new System.EventHandler(this.requestPostButton_Click);
             // 
             // richTextBox1
             // 
@@ -184,22 +197,11 @@
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
-            // requestPostButton
-            // 
-            this.requestPostButton.Location = new System.Drawing.Point(21, 377);
-            this.requestPostButton.Name = "requestPostButton";
-            this.requestPostButton.Size = new System.Drawing.Size(167, 23);
-            this.requestPostButton.TabIndex = 4;
-            this.requestPostButton.Text = "Request Posts";
-            this.requestPostButton.UseVisualStyleBackColor = true;
-            this.requestPostButton.Visible = false;
-            // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(850, 494);
-            this.Controls.Add(this.requestPostButton);
+            this.ClientSize = new System.Drawing.Size(665, 412);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.logBox);
             this.Controls.Add(this.newPostBox);

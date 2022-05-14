@@ -120,6 +120,5 @@ namespace client
         Error,
         NewPost,
         Posts,
-        
     }
 }

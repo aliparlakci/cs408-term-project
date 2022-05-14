@@ -39,10 +39,19 @@ namespace client
 
             _client.OnSuccessfulAccountCreation(ClearInputs);
 
+            _client.OnConnect(() =>
+            {
+                connectBox.Enabled = false;
+                disconnectButton.Enabled = true;
+                newPostBox.Visible = true;
+                newPostBox.Enabled = true;
+            });
+
             _client.OnUsernameNotExists(() =>
             {
                 userNameInput.Text = "";
                 connectBox.Enabled = true;
+                newPostBox.Visible = false;
             });
         }
 
@@ -94,7 +103,7 @@ namespace client
 
             if (Int32.TryParse(portInput.Text, out serverPort))
             {
-                _client.TryConnect(ip.Trim(), serverPort, userNameInput.Text);
+                _client.Connect(ip.Trim(), serverPort, userNameInput.Text);
             }
             else
             {
@@ -124,6 +133,11 @@ namespace client
             //var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
             //_client.Send(message);
 
+        }
+
+        private void requestPostButton_Click(object sender, EventArgs e)
+        {
+            _client.RequestPosts();
         }
     }
 }

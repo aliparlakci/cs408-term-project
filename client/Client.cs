@@ -17,10 +17,13 @@ namespace client
         bool terminating = false;
         bool connected = false;
 
+        private string _username = "";
+
         private Action onDisconnect;
         private Action onUsernameAlreadyExists;
         private Action onSuccessfulAccountCreation;
         private Action onUsernameNotExists;
+        private Action onConnect;
 
         public Client(Logger logger)
         {
@@ -47,9 +50,14 @@ namespace client
             onSuccessfulAccountCreation = func;
         }
 
+        public void OnConnect(Action func)
+        {
+            onConnect = func;
+        }
+
         public void SetTerminating() { terminating = true; }
 
-        public bool TryConnect(string ip, int port, string username)
+        public void Connect(string ip, int port, string username)
         {
             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -59,6 +67,7 @@ namespace client
                 connected = true;
 
                 var message = CayGetirProtocol.Login(username);
+                _username = username;
                 Send(message);
 
                 Thread receiveThread = new Thread(handshake);
@@ -66,10 +75,15 @@ namespace client
             }
             catch
             {
-                return false;
+                _logger.Write("Bağlanma sorunlarım var.\n");
+                if (onDisconnect != null) onDisconnect();
             }
+        }
 
-            return true;
+        public void RequestPosts()
+        {
+            var message = CayGetirProtocol.Message($"POSTS username={_username}");
+            Send(message);
         }
 
         public bool Send(string message)
@@ -126,23 +140,20 @@ namespace client
             if (type == MessageType.Message)
             {
                 var message = CayGetirProtocol.ParseMessage(incomingMessage);
-
-                if (!message.Contains("created an account"))
-                {
-                    if (onSuccessfulAccountCreation != null) onSuccessfulAccountCreation();
-                }
-
                 _logger.Write($"{message}\n");
             }
 
-            if(type == MessageType.Posts)
+            if (type == MessageType.Posts)
             {
                 var posts = CayGetirProtocol.ParsePosts(incomingMessage);
 
                 _logger.Write("Showing all posts from clients:\n");
-                foreach(var post in posts)
+                foreach (var post in posts)
                 {
-                    _logger.Write($"");
+                    _logger.Write($"Username: {post.Username}\n");
+                    _logger.Write($"PostID: {post.Id}\n");
+                    _logger.Write($"Post: {post.Body}\n");
+                    _logger.Write($"Timestamp: {post.CreatedAt}\n");
                 }
             }
         }
@@ -165,7 +176,16 @@ namespace client
                         {
                             _logger.Write($"{payload}\n");
                             Thread receiveThread = new Thread(receive);
+                            if (onConnect != null) onConnect();
                             receiveThread.Start();
+                            break;
+
+                            Task.Delay(5).ContinueWith((task) =>
+                            {
+                                connected = false;
+                                clientSocket.Close();
+                                if (onDisconnect != null) onDisconnect();
+                            });
                         }
                         else
                         {
@@ -200,7 +220,7 @@ namespace client
                         HandleIncomingMessage(message);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     if (!terminating)
                     {

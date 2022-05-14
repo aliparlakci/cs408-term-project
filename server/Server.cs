@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace server
@@ -132,20 +133,7 @@ namespace server
                         string message = Encoding.Default.GetString(buffer);
                         message = message.Substring(0, message.IndexOf('\0'));
 
-                        //var user = CayGetirProtocol.ParseUser(message);
-                        //if (!_userDb.Exists((item) => item.Username == user.Username))
-                        //{
-                        //    _userDb.InsertUser(user);
-                        //    _logger.Write($"{user.Username} has created an account!\n");
-                        //    var response = CayGetirProtocol.Message("You have created a new account!");
-                        //    Send(client, response);
-                        //}
-                        //else
-                        //{
-                        //    _logger.Write($"An account with the username {user.Username} already exists!\n");
-                        //    var response = CayGetirProtocol.Error("There is already an account with this username!");
-                        //    Send(client, response);
-                        //}
+                        HandleIncomingMessage(client, message);
                     }
                 }
                 catch (SocketException ex)
@@ -159,6 +147,32 @@ namespace server
                     connected = false;
                 }
             }
+        }
+
+        public void HandleIncomingMessage(Socket client, string message)
+        {
+            var type = CayGetirProtocol.DetermineType(message);
+
+            if (type == MessageType.Message)
+            {
+                var payload = CayGetirProtocol.ParseMessage(message);
+
+                if (payload.Contains("POSTS"))
+                {
+                    var re = new Regex("POSTS username=(.*)");
+                    var groups = re.Matches(message);
+
+                    var username = groups[0].Groups[1].Value;
+                    SendPosts(client, username);
+                }
+            }
+        }
+
+        private void SendPosts(Socket client, string username)
+        {
+            var posts = _postDb.GetPostsExceptUsername(username);
+            var response = CayGetirProtocol.Posts(posts);
+            Send(client, response);
         }
 
         public void Dispose()
