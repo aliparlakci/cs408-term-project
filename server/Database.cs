@@ -11,7 +11,7 @@ namespace server
 {
     public abstract class Database<T> : IDisposable
     {
-        protected string _filename = "user-db.txt";
+        protected string _filename;
         protected List<T> items;
 
         public Database(string filename)
@@ -28,7 +28,7 @@ namespace server
             ReadFile();
         }
 
-        protected void WriteToFile()
+        protected virtual void WriteToFile()
         {
             var lines = items.Select(item => JsonConvert.SerializeObject(item));
             File.WriteAllLines(_filename, lines);
@@ -45,7 +45,7 @@ namespace server
             WriteToFile();
         }
 
-        protected void ReadFile()
+        protected virtual void ReadFile()
         {
             items = File.ReadAllLines(_filename).Select(line =>
             {

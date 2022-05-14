@@ -15,7 +15,7 @@ namespace server
         [STAThread]
         static void Main()
         {
-            var usersDb = new UsersDatabase("users.txt");
+            var usersDb = new UsersDatabase("user-db.txt");
             var postsDb = new PostsDatabase("posts.txt");
             var logger = new Logger();
             var server = new Server(usersDb, postsDb, logger);

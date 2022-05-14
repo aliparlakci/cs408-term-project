@@ -12,9 +12,14 @@ namespace server
     {
         public UsersDatabase(string filename) : base(filename) { }
 
-        //public void InsertUser(User user)
-        //{
-        //    base.InsertItem(user);
-        //}
+        protected override void ReadFile()
+        {
+            items = File.ReadAllLines(_filename).ToList();
+        }
+
+        protected override void WriteToFile()
+        {
+            File.WriteAllLines(_filename, items);
+        }
     }
 }

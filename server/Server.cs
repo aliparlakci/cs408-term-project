@@ -85,6 +85,9 @@ namespace server
                             _logger.Write($"{username} tried to connect to the server but cannot\n");
                             var response = CayGetirProtocol.Error("Please enter a valid username!");
                             Send(newClient, response);
+                            
+                            newClient.Close();
+                            continue;
                             //burada connect olamadığı için throw error yapıcaz bence ama burayı sana bıraktık :))
                         }
                         else
@@ -94,14 +97,15 @@ namespace server
                             Send(newClient, response);
                         }
                     }
-                        clientSockets.Add(newClient);
-                    _logger.Write("A client is connected.\n");
+                    clientSockets.Add(newClient);
 
                     Thread receiveThread = new Thread(() => receive(newClient));
                     receiveThread.Start();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.ToString());
+
                     if (terminating)
                     {
                         listening = false;

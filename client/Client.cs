@@ -20,6 +20,7 @@ namespace client
         private Action onDisconnect;
         private Action onUsernameAlreadyExists;
         private Action onSuccessfulAccountCreation;
+        private Action onUsernameNotExists;
 
         public Client(Logger logger)
         {
@@ -36,6 +37,11 @@ namespace client
             onUsernameAlreadyExists = func;
         }
 
+        public void OnUsernameNotExists(Action func)
+        {
+            onUsernameNotExists = func;
+        }
+
         public void OnSuccessfulAccountCreation(Action func)
         {
             onSuccessfulAccountCreation = func;
@@ -43,19 +49,19 @@ namespace client
 
         public void SetTerminating() { terminating = true; }
 
-        public bool Connect(string ip, int port, string username)
+        public bool TryConnect(string ip, int port, string username)
         {
             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
                 clientSocket.Connect(ip, port);
+                connected = true;
+
                 var message = CayGetirProtocol.Login(username);
                 Send(message);
 
-                connected = true;
-
-                Thread receiveThread = new Thread(receive);
+                Thread receiveThread = new Thread(handshake);
                 receiveThread.Start();
             }
             catch
@@ -109,6 +115,12 @@ namespace client
                     if (onUsernameAlreadyExists != null) onUsernameAlreadyExists();
                     _logger.Write($"{error}\n");
                 }
+
+                if (error.Contains("enter a valid username"))
+                {
+                    if (onUsernameAlreadyExists != null) onUsernameAlreadyExists();
+                    _logger.Write($"{error}\n");
+                }
             }
 
             if (type == MessageType.Message)
@@ -131,6 +143,44 @@ namespace client
                 foreach(var post in posts)
                 {
                     _logger.Write($"");
+                }
+            }
+        }
+
+        private void handshake()
+        {
+            while (connected)
+            {
+                try
+                {
+                    Byte[] buffer = new Byte[1024];
+                    if (clientSocket.Receive(buffer) > 0)
+                    {
+                        string message = Encoding.Default.GetString(buffer);
+                        message = message.Substring(0, message.IndexOf('\0'));
+                        var type = CayGetirProtocol.DetermineType(message);
+                        var payload = CayGetirProtocol.ParseMessage(message);
+
+                        if (type == MessageType.Message)
+                        {
+                            _logger.Write($"{payload}\n");
+                            Thread receiveThread = new Thread(receive);
+                            receiveThread.Start();
+                        }
+                        else
+                        {
+                            _logger.Write($"{CayGetirProtocol.ParseError(message)}\n");
+                            connected = false;
+                            clientSocket.Close();
+                            if (onUsernameNotExists != null) onUsernameNotExists();
+                        }
+                    }
+                }
+                catch
+                {
+                    connected = false;
+                    clientSocket.Close();
+                    if (onDisconnect != null) onDisconnect();
                 }
             }
         }

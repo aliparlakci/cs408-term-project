@@ -31,20 +31,20 @@
             this.connectBox = new System.Windows.Forms.GroupBox();
             this.connectButton = new System.Windows.Forms.Button();
             this.portInput = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.ipInput = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.userNameInput = new System.Windows.Forms.TextBox();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.userNameInput = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.createUserButton = new System.Windows.Forms.Button();
-            this.newUserBox = new System.Windows.Forms.GroupBox();
+            this.newPostBox = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.requestPostButton = new System.Windows.Forms.Button();
             this.connectBox.SuspendLayout();
-            this.newUserBox.SuspendLayout();
+            this.newPostBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // connectBox
@@ -78,7 +78,16 @@
             this.portInput.Location = new System.Drawing.Point(76, 45);
             this.portInput.Name = "portInput";
             this.portInput.Size = new System.Drawing.Size(100, 20);
-            this.portInput.TabIndex = 1;
+            this.portInput.TabIndex = 2;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 74);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(55, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Username";
             // 
             // ipInput
             // 
@@ -104,6 +113,13 @@
             this.label1.Size = new System.Drawing.Size(17, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "IP";
+            // 
+            // userNameInput
+            // 
+            this.userNameInput.Location = new System.Drawing.Point(76, 71);
+            this.userNameInput.Name = "userNameInput";
+            this.userNameInput.Size = new System.Drawing.Size(100, 20);
+            this.userNameInput.TabIndex = 3;
             // 
             // logBox
             // 
@@ -137,22 +153,6 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Post";
             // 
-            // userNameInput
-            // 
-            this.userNameInput.Location = new System.Drawing.Point(76, 71);
-            this.userNameInput.Name = "userNameInput";
-            this.userNameInput.Size = new System.Drawing.Size(100, 20);
-            this.userNameInput.TabIndex = 5;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 74);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Username";
-            // 
             // createUserButton
             // 
             this.createUserButton.Location = new System.Drawing.Point(9, 124);
@@ -163,18 +163,18 @@
             this.createUserButton.UseVisualStyleBackColor = true;
             this.createUserButton.Click += new System.EventHandler(this.createUserButton_Click);
             // 
-            // newUserBox
+            // newPostBox
             // 
-            this.newUserBox.Controls.Add(this.richTextBox1);
-            this.newUserBox.Controls.Add(this.createUserButton);
-            this.newUserBox.Controls.Add(this.label3);
-            this.newUserBox.Location = new System.Drawing.Point(12, 193);
-            this.newUserBox.Name = "newUserBox";
-            this.newUserBox.Size = new System.Drawing.Size(189, 169);
-            this.newUserBox.TabIndex = 1;
-            this.newUserBox.TabStop = false;
-            this.newUserBox.Text = "Create User";
-            this.newUserBox.Visible = false;
+            this.newPostBox.Controls.Add(this.richTextBox1);
+            this.newPostBox.Controls.Add(this.createUserButton);
+            this.newPostBox.Controls.Add(this.label3);
+            this.newPostBox.Location = new System.Drawing.Point(12, 193);
+            this.newPostBox.Name = "newPostBox";
+            this.newPostBox.Size = new System.Drawing.Size(189, 169);
+            this.newPostBox.TabIndex = 1;
+            this.newPostBox.TabStop = false;
+            this.newPostBox.Text = "Create Post";
+            this.newPostBox.Visible = false;
             // 
             // richTextBox1
             // 
@@ -202,7 +202,7 @@
             this.Controls.Add(this.requestPostButton);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.logBox);
-            this.Controls.Add(this.newUserBox);
+            this.Controls.Add(this.newPostBox);
             this.Controls.Add(this.connectBox);
             this.MinimumSize = new System.Drawing.Size(557, 357);
             this.Name = "ClientForm";
@@ -210,8 +210,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClientForm_FormClosing);
             this.connectBox.ResumeLayout(false);
             this.connectBox.PerformLayout();
-            this.newUserBox.ResumeLayout(false);
-            this.newUserBox.PerformLayout();
+            this.newPostBox.ResumeLayout(false);
+            this.newPostBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -230,7 +230,7 @@
         private System.Windows.Forms.TextBox userNameInput;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button createUserButton;
-        private System.Windows.Forms.GroupBox newUserBox;
+        private System.Windows.Forms.GroupBox newPostBox;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button requestPostButton;
     }

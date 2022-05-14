@@ -28,7 +28,7 @@ namespace client
             _client.OnDisconnect(() =>
             {
                 connectBox.Enabled = true;
-                newUserBox.Visible = false;
+                newPostBox.Visible = false;
                 disconnectButton.Enabled = false;
             });
 
@@ -38,6 +38,12 @@ namespace client
             });
 
             _client.OnSuccessfulAccountCreation(ClearInputs);
+
+            _client.OnUsernameNotExists(() =>
+            {
+                userNameInput.Text = "";
+                connectBox.Enabled = true;
+            });
         }
 
         private void ClearInputs()
@@ -88,21 +94,7 @@ namespace client
 
             if (Int32.TryParse(portInput.Text, out serverPort))
             {
-                if (_client.Connect(ip.Trim(), serverPort, userNameInput.Text))
-                {
-
-                    logBox.Enabled = true;
-
-                    _logger.Write($"You are connected!\n");
-
-                    newUserBox.Visible = true;
-                    disconnectButton.Enabled = true;
-                }
-                else
-                {
-                    _logger.Write("Connection could not be established.\n");
-                    connectBox.Enabled = true;
-                }
+                _client.TryConnect(ip.Trim(), serverPort, userNameInput.Text);
             }
             else
             {
