@@ -147,13 +147,13 @@ namespace client
             {
                 var posts = CayGetirProtocol.ParsePosts(incomingMessage);
 
-                _logger.Write("Showing all posts from clients:\n");
+                _logger.Write("\nShowing all posts from clients:\n");
                 foreach (var post in posts)
                 {
                     _logger.Write($"Username: {post.Username}\n");
                     _logger.Write($"PostID: {post.Id}\n");
                     _logger.Write($"Post: {post.Body}\n");
-                    _logger.Write($"Timestamp: {post.CreatedAt}\n");
+                    _logger.Write($"Timestamp: {post.CreatedAt}\n\n");
                 }
             }
         }

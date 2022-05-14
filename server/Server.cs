@@ -164,6 +164,7 @@ namespace server
                     var groups = re.Matches(message);
 
                     var username = groups[0].Groups[1].Value;
+                    _logger.Write($"Showed all posts for {username}\n");
                     SendPosts(client, username);
                 }
             }
