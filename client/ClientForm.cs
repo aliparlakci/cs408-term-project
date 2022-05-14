@@ -28,7 +28,7 @@ namespace client
             _client.OnDisconnect(() =>
             {
                 connectBox.Enabled = true;
-                newPostBox.Visible = false;
+                newPostBox.Enabled = false;
                 disconnectButton.Enabled = false;
             });
 
@@ -43,7 +43,6 @@ namespace client
             {
                 connectBox.Enabled = false;
                 disconnectButton.Enabled = true;
-                newPostBox.Visible = true;
                 newPostBox.Enabled = true;
             });
 
@@ -51,7 +50,7 @@ namespace client
             {
                 userNameInput.Text = "";
                 connectBox.Enabled = true;
-                newPostBox.Visible = false;
+                newPostBox.Enabled = false;
             });
         }
 

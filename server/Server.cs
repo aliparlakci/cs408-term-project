@@ -22,9 +22,10 @@ namespace server
         bool terminating = false;
         bool listening = false;
 
-        public Server(UsersDatabase userDb, PostsDatabase _postDb, Logger logger)
+        public Server(UsersDatabase userDb, PostsDatabase postDb, Logger logger)
         {
             _userDb = userDb;
+            _postDb = postDb;
             _logger = logger;
         }
 

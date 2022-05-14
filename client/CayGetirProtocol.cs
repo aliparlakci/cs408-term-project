@@ -92,21 +92,30 @@ namespace client
         public static IEnumerable<Post> ParsePosts(string message)
         {
             var lines = message.Split(new char[] { '\n' });
-
             var posts = new List<Post> { };
 
-            var line = lines[3];
-            var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
-            var groups = re.Matches(line);
-            var post = new Post
+            foreach (var line in lines.Skip(2))
             {
-                Id = Int32.Parse(groups[0].Groups[1].Value),
-                Username = groups[0].Groups[2].Value,
-                Body = groups[0].Groups[3].Value,
-                CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
-            };
+                try
+                {
+                    var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
+                    var groups = re.Matches(line);
+                    var post = new Post
+                    {
+                        Id = Int32.Parse(groups[0].Groups[1].Value),
+                        Username = groups[0].Groups[2].Value,
+                        Body = groups[0].Groups[3].Value,
+                        CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
+                    };
 
-            posts.Add(post);
+                    posts.Add(post);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    continue;
+                }
+            }
+
             return posts;
 
         }

@@ -15,7 +15,7 @@ namespace server
         public IEnumerable<Post> GetPostsExceptUsername(string username)
         {
             ReadFile();
-            return items.Where(item => item.Username != username);
+            return base.items.Where(item => item.Username != username);
         }
 
         public void InsertPost(Post post)

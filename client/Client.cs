@@ -178,14 +178,8 @@ namespace client
                             Thread receiveThread = new Thread(receive);
                             if (onConnect != null) onConnect();
                             receiveThread.Start();
+                            connected = true;
                             break;
-
-                            Task.Delay(5).ContinueWith((task) =>
-                            {
-                                connected = false;
-                                clientSocket.Close();
-                                if (onDisconnect != null) onDisconnect();
-                            });
                         }
                         else
                         {
@@ -196,8 +190,9 @@ namespace client
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     connected = false;
                     clientSocket.Close();
                     if (onDisconnect != null) onDisconnect();
@@ -211,7 +206,7 @@ namespace client
             {
                 try
                 {
-                    Byte[] buffer = new Byte[1024];
+                    Byte[] buffer = new Byte[4096];
                     if (clientSocket.Receive(buffer) > 0)
                     {
                         string message = Encoding.Default.GetString(buffer);

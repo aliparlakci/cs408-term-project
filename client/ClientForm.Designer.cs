@@ -171,13 +171,13 @@
             this.newPostBox.Controls.Add(this.richTextBox1);
             this.newPostBox.Controls.Add(this.createUserButton);
             this.newPostBox.Controls.Add(this.label3);
+            this.newPostBox.Enabled = false;
             this.newPostBox.Location = new System.Drawing.Point(12, 151);
             this.newPostBox.Name = "newPostBox";
             this.newPostBox.Size = new System.Drawing.Size(189, 220);
             this.newPostBox.TabIndex = 1;
             this.newPostBox.TabStop = false;
             this.newPostBox.Text = "Create Post";
-            this.newPostBox.Visible = false;
             // 
             // requestPostButton
             // 
