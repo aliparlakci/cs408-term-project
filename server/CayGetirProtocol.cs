@@ -30,9 +30,9 @@ namespace server
             return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string NewPost(string id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
+        public static string NewPost(Int32 id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
         {
-            return $"Cay Getir 1.0\ntype=newpost\nid={id}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
+            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
         }
 
         public static string Posts(IEnumerable<Post> posts)

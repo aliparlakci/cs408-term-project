@@ -139,10 +139,11 @@ namespace server
                 }
                 catch (SocketException ex)
                 {
-                    if (!terminating)
-                    {
-                        _logger.Write("A client has disconnected\n");
-                    }
+
+                    //if (!terminating)
+                    //{
+                    //    _logger.Write("A client has disconnected\n");
+                    //}
                     client.Close();
                     clientSockets.Remove(client);
                     connected = false;
@@ -167,7 +168,23 @@ namespace server
                     _logger.Write($"Showed all posts for {username}\n");
                     SendPosts(client, username);
                 }
+
+                if(payload.Contains("disconnected"))
+                {
+                    _logger.Write($"{payload}\n");
+                }
+
             }
+            if(type == MessageType.NewPost)
+            {
+                var post = CayGetirProtocol.ParseNewPost(message);
+                _postDb.InsertPost(post);
+                _logger.Write($"{post.Username} has sent a post: {post.Body}\n");
+                var response = CayGetirProtocol.NewPost(post.Id, post.Username, post.Body, post.CreatedAt);
+                Send(client, response);
+            }
+
+
         }
 
         private void SendPosts(Socket client, string username)

@@ -20,9 +20,9 @@ namespace server
             var logger = new Logger();
             var server = new Server(usersDb, postsDb, logger);
 
-            postsDb.InsertPost(new Post(0, "suada", "Kimin postu buu", DateTime.Now));
-            postsDb.InsertPost(new Post(0, "suada", "Bu benim postum", DateTime.Now));
-            postsDb.InsertPost(new Post(0, "mark", "Deneme", DateTime.Now));
+            //postsDb.InsertPost(new Post(0, "suada", "Kimin postu buu", DateTime.Now));
+            //postsDb.InsertPost(new Post(0, "suada", "Bu benim postum", DateTime.Now));
+            //postsDb.InsertPost(new Post(0, "mark", "Deneme", DateTime.Now));
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

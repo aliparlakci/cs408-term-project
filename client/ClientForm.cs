@@ -52,6 +52,11 @@ namespace client
                 connectBox.Enabled = true;
                 newPostBox.Enabled = false;
             });
+
+            _client.OnSendNewPost(() =>
+            {
+                postContentBox.Text = "";
+            });
         }
 
         private void ClearInputs()
@@ -122,21 +127,26 @@ namespace client
             Environment.Exit(0);
         }
 
-        private void createUserButton_Click(object sender, EventArgs e)
-        {
-            if (!VerifyInputs())
-            {
-                return;
-            }
+        //private void createUserButton_Click(object sender, EventArgs e)
+        //{
+        //    if (!VerifyInputs())
+        //    {
+        //        return;
+        //    }
 
-            //var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
-            //_client.Send(message);
+        //    //var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
+        //    //_client.Send(message);
 
-        }
+        //}
 
         private void requestPostButton_Click(object sender, EventArgs e)
         {
             _client.RequestPosts();
+        }
+
+        private void sendPostButton_Click(object sender, EventArgs e)
+        {
+            _client.SendNewPost(postContentBox.Text);
         }
     }
 }

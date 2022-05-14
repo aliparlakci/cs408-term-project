@@ -30,9 +30,9 @@ namespace client
             return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string NewPost(string id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
+        public static string NewPost(Int32 id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
         {
-            return $"Cay Getir 1.0\ntype=newpost\nid={id}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
+            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
         }
 
 
@@ -87,6 +87,19 @@ namespace client
             var lines = message.Split(new char[] { '\n' });
 
             return lines[2].Substring(8);
+        }
+
+        public static Post ParseNewPost(string message)
+        {
+            var post = new Post();
+            var lines = message.Split(new char[] { '\n' });
+
+            post.Id = Int32.Parse(lines[2].Substring(3));
+            post.Username = lines[3].Substring(9);
+            post.Body = lines[4].Substring(5);
+            post.CreatedAt = DateTime.Parse(lines[5].Substring(10));
+
+            return post;
         }
 
         public static IEnumerable<Post> ParsePosts(string message)

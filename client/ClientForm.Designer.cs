@@ -39,10 +39,10 @@
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.createUserButton = new System.Windows.Forms.Button();
+            this.sendPostButton = new System.Windows.Forms.Button();
             this.newPostBox = new System.Windows.Forms.GroupBox();
             this.requestPostButton = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.postContentBox = new System.Windows.Forms.RichTextBox();
             this.connectBox.SuspendLayout();
             this.newPostBox.SuspendLayout();
             this.SuspendLayout();
@@ -155,21 +155,21 @@
             this.label3.Text = "Post";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // createUserButton
+            // sendPostButton
             // 
-            this.createUserButton.Location = new System.Drawing.Point(6, 162);
-            this.createUserButton.Name = "createUserButton";
-            this.createUserButton.Size = new System.Drawing.Size(167, 23);
-            this.createUserButton.TabIndex = 2;
-            this.createUserButton.Text = "Send Post";
-            this.createUserButton.UseVisualStyleBackColor = true;
-            this.createUserButton.Click += new System.EventHandler(this.createUserButton_Click);
+            this.sendPostButton.Location = new System.Drawing.Point(6, 162);
+            this.sendPostButton.Name = "sendPostButton";
+            this.sendPostButton.Size = new System.Drawing.Size(167, 23);
+            this.sendPostButton.TabIndex = 2;
+            this.sendPostButton.Text = "Send Post";
+            this.sendPostButton.UseVisualStyleBackColor = true;
+            this.sendPostButton.Click += new System.EventHandler(this.sendPostButton_Click);
             // 
             // newPostBox
             // 
             this.newPostBox.Controls.Add(this.requestPostButton);
-            this.newPostBox.Controls.Add(this.richTextBox1);
-            this.newPostBox.Controls.Add(this.createUserButton);
+            this.newPostBox.Controls.Add(this.postContentBox);
+            this.newPostBox.Controls.Add(this.sendPostButton);
             this.newPostBox.Controls.Add(this.label3);
             this.newPostBox.Enabled = false;
             this.newPostBox.Location = new System.Drawing.Point(12, 151);
@@ -189,13 +189,13 @@
             this.requestPostButton.UseVisualStyleBackColor = true;
             this.requestPostButton.Click += new System.EventHandler(this.requestPostButton_Click);
             // 
-            // richTextBox1
+            // postContentBox
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(76, 19);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(100, 96);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "";
+            this.postContentBox.Location = new System.Drawing.Point(76, 19);
+            this.postContentBox.Name = "postContentBox";
+            this.postContentBox.Size = new System.Drawing.Size(100, 96);
+            this.postContentBox.TabIndex = 4;
+            this.postContentBox.Text = "";
             // 
             // ClientForm
             // 
@@ -231,9 +231,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox userNameInput;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button createUserButton;
+        private System.Windows.Forms.Button sendPostButton;
         private System.Windows.Forms.GroupBox newPostBox;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox postContentBox;
         private System.Windows.Forms.Button requestPostButton;
     }
 }
