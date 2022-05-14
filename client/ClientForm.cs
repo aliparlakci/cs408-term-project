@@ -41,6 +41,7 @@ namespace client
 
             _client.OnConnect(() =>
             {
+                userNameInput.Text = "";
                 connectBox.Enabled = false;
                 disconnectButton.Enabled = true;
                 newPostBox.Enabled = true;
