@@ -24,6 +24,7 @@ namespace client
         private Action onSuccessfulAccountCreation;
         private Action onUsernameNotExists;
         private Action onConnect;
+        private Action onSendNewPost;
 
         public Client(Logger logger)
         {
@@ -53,6 +54,11 @@ namespace client
         public void OnConnect(Action func)
         {
             onConnect = func;
+        }
+
+        public void OnSendNewPost(Action func)
+        {
+            onSendNewPost = func;
         }
 
         public void SetTerminating() { terminating = true; }
@@ -86,6 +92,12 @@ namespace client
             Send(message);
         }
 
+        public void SendNewPost(string body)
+        {
+            var message = CayGetirProtocol.NewPost(0, _username, body, DateTime.Now);
+            Send(message);
+        }
+
         public bool Send(string message)
         {
             if (!connected)
@@ -114,9 +126,12 @@ namespace client
 
         public void Disconnect()
         {
+            var message = CayGetirProtocol.Message($"{_username} has disconnected");
+            Send(message);
             clientSocket.Close();
             if (onDisconnect != null) onDisconnect();
         }
+
         private void HandleIncomingMessage(string incomingMessage)
         {
             var type = CayGetirProtocol.DetermineType(incomingMessage);
@@ -155,6 +170,13 @@ namespace client
                     _logger.Write($"Post: {post.Body}\n");
                     _logger.Write($"Timestamp: {post.CreatedAt}\n\n");
                 }
+            }
+            if(type == MessageType.NewPost)
+            {
+                if (onSendNewPost != null) onSendNewPost();
+                var post = CayGetirProtocol.ParseNewPost(incomingMessage);
+                _logger.Write("\nYou have successfull sent a post!\n");
+                _logger.Write($"{post.Username}: {post.Body}\n");
             }
         }
 
