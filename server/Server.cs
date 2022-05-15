@@ -17,8 +17,7 @@ namespace server
         private Logger _logger;
 
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        List<Socket> clientSockets = new List<Socket>();
-        List<String> userNameList = new List<String>();
+        List<Client> clients = new List<Client>();
 
         bool terminating = false;
         bool listening = false;
@@ -76,7 +75,6 @@ namespace server
                 try
                 {
                     Socket newClient = serverSocket.Accept();
-                    string _userName = "";
                     Byte[] buffer = new Byte[1024];
                     if (newClient.Receive(buffer) > 0)
                     {
@@ -89,31 +87,33 @@ namespace server
                             _logger.Write($"{username} tried to connect to the server but cannot\n");
                             var response = CayGetirProtocol.Error("Please enter a valid username!");
                             Send(newClient, response);
-                            
+
                             newClient.Close();
-                            continue;
-                            //burada connect olamadığı için throw error yapıcaz bence ama burayı sana bıraktık :))
                         }
-                        else if(userNameList.Contains(username))
+                        else if (clients.Any(client => client.Username == username))
                         {
                             _logger.Write($"{username} tried to connect again!\n");
                             var response = CayGetirProtocol.Error($"Hey {username}, you have already connected");
                             Send(newClient, response);
+                            newClient.Close();
                         }
                         else
                         {
                             _logger.Write($"{username} has connected\n");
                             var response = CayGetirProtocol.Message($"Hello {username}! You are connected to the server.");
                             Send(newClient, response);
-                            clientSockets.Add(newClient);
-                            userNameList.Add(username);
-                            _userName = username;
+
+                            var client = new Client
+                            {
+                                Socket = newClient,
+                                Username = username,
+                            };
+                            clients.Add(client);
+
+                            Thread receiveThread = new Thread(() => receive(client));
+                            receiveThread.Start();
                         }
                     }
-                  
-
-                    Thread receiveThread = new Thread(() => receive(newClient, _userName));
-                    receiveThread.Start();
                 }
                 catch (Exception ex)
                 {
@@ -131,7 +131,7 @@ namespace server
             }
         }
 
-        private void receive(Socket client, String username)
+        private void receive(Client client)
         {
             bool connected = true;
 
@@ -140,7 +140,7 @@ namespace server
                 try
                 {
                     Byte[] buffer = new Byte[1024];
-                    if (client.Receive(buffer) > 0)
+                    if (client.Socket.Receive(buffer) > 0)
                     {
                         string message = Encoding.Default.GetString(buffer);
                         message = message.Substring(0, message.IndexOf('\0'));
@@ -151,19 +151,18 @@ namespace server
                 catch (SocketException ex)
                 {
 
-                    //if (!terminating)
-                    //{
-                    //    _logger.Write("A client has disconnected\n");
-                    //}
-                    client.Close();
-                    clientSockets.Remove(client);
-                    userNameList.Remove(username);
+                    if (!terminating)
+                    {
+                        _logger.Write($"{client.Username} has disconnected\n");
+                    }
+                    client.Socket.Close();
+                    clients.Remove(client);
                     connected = false;
                 }
             }
         }
 
-        public void HandleIncomingMessage(Socket client, string message)
+        public void HandleIncomingMessage(Client client, string message)
         {
             var type = CayGetirProtocol.DetermineType(message);
 
@@ -180,30 +179,24 @@ namespace server
                     _logger.Write($"Showed all posts for {username}\n");
                     SendPosts(client, username);
                 }
-
-                if(payload.Contains("disconnected"))
-                {
-                    _logger.Write($"{payload}\n");
-                }
-
             }
-            if(type == MessageType.NewPost)
+            if (type == MessageType.NewPost)
             {
                 var post = CayGetirProtocol.ParseNewPost(message);
                 _postDb.InsertPost(post);
                 _logger.Write($"{post.Username} has sent a post: {post.Body}\n");
                 var response = CayGetirProtocol.NewPost(post.Id, post.Username, post.Body, post.CreatedAt);
-                Send(client, response);
+                Send(client.Socket, response);
             }
 
 
         }
 
-        private void SendPosts(Socket client, string username)
+        private void SendPosts(Client client, string username)
         {
             var posts = _postDb.GetPostsExceptUsername(username);
             var response = CayGetirProtocol.Posts(posts);
-            Send(client, response);
+            Send(client.Socket, response);
         }
 
         public void Dispose()

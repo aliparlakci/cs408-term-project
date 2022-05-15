@@ -81,7 +81,7 @@ namespace client
             }
             catch
             {
-                _logger.Write("Bağlanma sorunlarım var.\n");
+                _logger.Write("Cannot connect to the specified destination.\n");
                 if (onDisconnect != null) onDisconnect();
             }
         }
@@ -126,8 +126,6 @@ namespace client
 
         public void Disconnect()
         {
-            var message = CayGetirProtocol.Message($"{_username} has disconnected");
-            Send(message);
             clientSocket.Close();
             if (onDisconnect != null) onDisconnect();
         }

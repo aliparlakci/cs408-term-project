@@ -128,18 +128,6 @@ namespace client
             Environment.Exit(0);
         }
 
-        //private void createUserButton_Click(object sender, EventArgs e)
-        //{
-        //    if (!VerifyInputs())
-        //    {
-        //        return;
-        //    }
-
-        //    //var message = CayGetirProtocol.Signup(nameInput.Text, surnameInput.Text, userNameInput.Text, passwordInput.Text);
-        //    //_client.Send(message);
-
-        //}
-
         private void requestPostButton_Click(object sender, EventArgs e)
         {
             _client.RequestPosts();
