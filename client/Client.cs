@@ -226,13 +226,22 @@ namespace client
             {
                 try
                 {
-                    Byte[] buffer = new Byte[4096];
-                    if (clientSocket.Receive(buffer) > 0)
+                    Byte[] buffer = new Byte[8];
+                    string message = "";
+                    int bytesReceived = 0;
+                    while ((bytesReceived = clientSocket.Receive(buffer)) > 0)
                     {
-                        string message = Encoding.Default.GetString(buffer);
-                        message = message.Substring(0, message.IndexOf('\0'));
+                        string bufferString = Encoding.Default.GetString(buffer);
+                        if (bufferString.IndexOf('\0') > 0)
+                        {
+                            bufferString = bufferString.Substring(0, bufferString.IndexOf('\0'));
+                        }
+                        message += bufferString;
 
-                        HandleIncomingMessage(message);
+                        if (bytesReceived < 8)
+                            HandleIncomingMessage(message);
+
+                        buffer = new Byte[8];
                     }
                 }
                 catch (Exception ex)
