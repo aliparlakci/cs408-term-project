@@ -178,18 +178,8 @@ namespace server
             if (type == MessageType.Message)
             {
                 var payload = CayGetirProtocol.ParseMessage(message);
-
-                if (payload.Contains("POSTS"))
-                {
-                    var re = new Regex("POSTS username=(.*)");
-                    var groups = re.Matches(message);
-
-                    var username = groups[0].Groups[1].Value;
-                    _logger.Write($"Showed all posts for {username}\n");
-                    SendPosts(client, username);
-                }
             }
-            if (type == MessageType.NewPost)
+            else if (type == MessageType.NewPost)
             {
                 var post = CayGetirProtocol.ParseNewPost(message);
                 _postDb.InsertPost(post);
@@ -197,8 +187,12 @@ namespace server
                 var response = CayGetirProtocol.NewPost(post.Id, post.Username, post.Body, post.CreatedAt);
                 Send(client.Socket, response);
             }
-
-
+            else if (type == MessageType.RequestPosts)
+            {
+                var username = CayGetirProtocol.ParseRequestPosts(message);
+                _logger.Write($"Showed all posts for {username}\n");
+                SendPosts(client, username);
+            }
         }
 
         private void SendPosts(Client client, string username)

@@ -88,7 +88,7 @@ namespace client
 
         public void RequestPosts()
         {
-            var message = CayGetirProtocol.Message($"POSTS username={_username}");
+            var message = CayGetirProtocol.RequestPosts(_username);
             Send(message);
         }
 

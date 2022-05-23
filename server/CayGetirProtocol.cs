@@ -30,7 +30,7 @@ namespace server
             return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string NewPost(Int32 id, string username, string body, DateTime createdAt) //createdAt burada string mi olmalı datetime mı olmalı??
+        public static string NewPost(Int32 id, string username, string body, DateTime createdAt)
         {
             return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
         }
@@ -45,6 +45,11 @@ namespace server
             }
 
             return str;
+        }
+
+        public static string RequestPosts(string username)
+        {
+            return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
         }
 
         public static MessageType DetermineType(string message)
@@ -82,6 +87,11 @@ namespace server
                 return MessageType.Error;
             }
 
+            if (type == "request_posts")
+            {
+                return MessageType.RequestPosts;
+            }
+
             return MessageType.Message;
         }
 
@@ -116,6 +126,13 @@ namespace server
             post.CreatedAt = DateTime.Parse(lines[5].Substring(10));
 
             return post;
+        }
+
+        public static string ParseRequestPosts(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            return lines[2].Substring(9);
         }
 
         public static string ParseMessage(string message)
@@ -162,6 +179,7 @@ namespace server
         Login,
         Error,
         NewPost,
-        Posts
+        Posts,
+        RequestPosts
     }
 }
