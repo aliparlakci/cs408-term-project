@@ -53,6 +53,12 @@ namespace server
             }).ToList();
         }
 
+        protected void RemoveItem(Func<T, bool> comparator)
+        {
+            items = items.Where(friendship => !comparator(friendship)).ToList();
+            WriteToFile();
+        }
+
         public void Dispose()
         {
             WriteToFile();

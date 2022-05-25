@@ -18,6 +18,11 @@ namespace server
             return base.items.Where(item => item.Username != username);
         }
 
+        public IEnumerable<Post> GetPostsOfUsers(IEnumerable<User> users)
+        {
+            return base.items.Where(item => users.Select(user => user.Username).Contains(item.Username));
+        }
+
         public void InsertPost(Post post)
         {
             try
