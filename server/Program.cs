@@ -36,6 +36,8 @@ namespace server
 
             //var q3 = friendshipDb.Has("serra", "ali");
 
+            //var friends = friendshipDb.GetFriendsOf("ali");
+
             return;
         }
     }

@@ -34,5 +34,10 @@ namespace server
         {
             return obj.GetHashCode() == GetHashCode();
         }
+
+        public bool Has(string username)
+        {
+            return username1 == username || username2 == username;
+        }
     }
 }
