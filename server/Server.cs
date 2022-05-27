@@ -139,25 +139,13 @@ namespace server
             {
                 try
                 {
-                    Byte[] buffer = new Byte[8];
-                    string message = "";
-                    int bytesReceived = 0;
-                    while ((bytesReceived = client.Socket.Receive(buffer)) > 0)
+                    Byte[] buffer = new Byte[4096];
+                    if (client.Socket.Receive(buffer) > 0)
                     {
-                        string bufferString = Encoding.Default.GetString(buffer);
-                        if (bufferString.IndexOf('\0') > 0)
-                        {
-                            bufferString = bufferString.Substring(0, bufferString.IndexOf('\0'));
-                        }
-                        message += bufferString;
+                        string message = Encoding.Default.GetString(buffer);
+                        message = message.Substring(0, message.IndexOf('\0'));
 
-                        if (bytesReceived < 8)
-                        {
-                            HandleIncomingMessage(client, message);
-                            break;
-                        }
-
-                        buffer = new Byte[8];
+                        HandleIncomingMessage(client, message);
                     }
                 }
                 catch (SocketException ex)

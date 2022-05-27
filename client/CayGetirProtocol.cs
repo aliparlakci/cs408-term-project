@@ -162,14 +162,14 @@ namespace client
             {
                 try
                 {
-                    var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
+                    var re = new Regex(@"id=(.*)&username=(.*)&timestamp=(.*)&body=([\S\s]*)");
                     var groups = re.Matches(line);
                     var post = new Post
                     {
                         Id = Int32.Parse(groups[0].Groups[1].Value),
                         Username = groups[0].Groups[2].Value,
-                        Body = groups[0].Groups[3].Value,
-                        CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
+                        CreatedAt = DateTime.Parse(groups[0].Groups[3].Value),
+                        Body = groups[0].Groups[4].Value,
                     };
 
                     posts.Add(post);
