@@ -39,6 +39,11 @@ namespace client
             return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
         }
 
+        public static string DeletePost(int id, string username)
+        {
+            return $"Cay Getir 1.0\ntype =delete_post\nid={id.ToString()}\nusername={username}";
+        }
+
         public static MessageType DetermineType(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -78,6 +83,11 @@ namespace client
             {
                 return MessageType.RequestPosts;
             }
+            if (type == "delete_post")
+            {
+                return MessageType.DeletePost;
+            }
+
 
             return MessageType.Message;
         }
@@ -139,6 +149,16 @@ namespace client
             return posts;
 
         }
+        public static DeletePostRequest ParseDeletePost(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+            var request = new DeletePostRequest();
+            request.Id = Int32.Parse(lines[2].Substring(3));
+            request.Username = lines[3].Substring(9);
+            return request;
+        }
+
+
     }
 
     public enum MessageType
@@ -149,6 +169,7 @@ namespace client
         Error,
         NewPost,
         Posts,
-        RequestPosts
+        RequestPosts,
+        DeletePost
     }
 }

@@ -98,6 +98,12 @@ namespace client
             Send(message);
         }
 
+        public void DeletePost(int id)
+        {
+            var message = CayGetirProtocol.DeletePost(id, _username);
+            Send(message);
+        }
+
         public bool Send(string message)
         {
             if (!connected)
