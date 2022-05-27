@@ -30,9 +30,9 @@ namespace server
             return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string NewPost(Int32 id, string username, string body, DateTime createdAt)
+        public static string NewPost(int id, string username, string body, DateTime createdAt)
         {
-            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
+            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\ntimestamp={createdAt.ToString()}\nbody={body}";
         }
 
         public static string Posts(IEnumerable<Post> posts)
@@ -41,7 +41,7 @@ namespace server
 
             foreach (var post in posts)
             {
-                str += $"id={post.Id}&username={post.Username}&body={post.Body}&timestamp={post.CreatedAt.ToString()}\n";
+                str += $"id={post.Id}&username={post.Username}&timestamp={post.CreatedAt.ToString()}&body={post.Body}\n";
             }
 
             return str;
@@ -124,15 +124,33 @@ namespace server
             return lines[2].Substring(9);
         }
 
-        public static Post ParseNewPost(string message)
+        public static string ParseMessage(string message)
         {
-            var post = new Post();
             var lines = message.Split(new char[] { '\n' });
 
-            post.Id = Int32.Parse(lines[2].Substring(3));
-            post.Username = lines[3].Substring(9);
-            post.Body = lines[4].Substring(5);
-            post.CreatedAt = DateTime.Parse(lines[5].Substring(10));
+            return lines[2].Substring(8);
+        }
+
+        public static string ParseError(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            return lines[2].Substring(8);
+        }
+        
+        public static Post ParseNewPost(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            var re = new Regex(@"Cay Getir 1.0\ntype=newpost\nid=(.*)\nusername=(.*)\ntimestamp=(.*)\nbody=([\S\s]*)");
+            var groups = re.Matches(message);
+            var post = new Post
+            {
+                Id = Int32.Parse(groups[0].Groups[1].Value),
+                Username = groups[0].Groups[2].Value,
+                CreatedAt = DateTime.Parse(groups[0].Groups[3].Value),
+                Body = groups[0].Groups[4].Value,
+            };
 
             return post;
         }
@@ -143,41 +161,35 @@ namespace server
 
             return lines[2].Substring(9);
         }
-
-        public static string ParseMessage(string message)
-        {
-            var lines = message.Split(new char[] { '\n' });
-
-            return lines[2].Substring(8);
-        }
-
+        
         public static IEnumerable<Post> ParsePosts(string message)
         {
             var lines = message.Split(new char[] { '\n' });
-
             var posts = new List<Post> { };
 
-            var line = lines[3];
-            var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
-            var groups = re.Matches(line);
-            var post = new Post
+            foreach (var line in lines.Skip(2))
             {
-                Id = Int32.Parse(groups[0].Groups[1].Value),
-                Username = groups[0].Groups[2].Value,
-                Body = groups[0].Groups[3].Value,
-                CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
-            };
+                try
+                {
+                    var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
+                    var groups = re.Matches(line);
+                    var post = new Post
+                    {
+                        Id = Int32.Parse(groups[0].Groups[1].Value),
+                        Username = groups[0].Groups[2].Value,
+                        Body = groups[0].Groups[3].Value,
+                        CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
+                    };
 
-            posts.Add(post);
+                    posts.Add(post);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    continue;
+                }
+            }
+
             return posts;
-
-        }
-
-        public static string ParseError(string message)
-        {
-            var lines = message.Split(new char[] { '\n' });
-
-            return lines[2].Substring(8);
         }
         public static DeletePostRequest ParseDeletePost(string message)
         {
