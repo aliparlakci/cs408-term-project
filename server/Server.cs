@@ -152,7 +152,10 @@ namespace server
                         message += bufferString;
 
                         if (bytesReceived < 8)
+                        {
                             HandleIncomingMessage(client, message);
+                            break;
+                        }
 
                         buffer = new Byte[8];
                     }

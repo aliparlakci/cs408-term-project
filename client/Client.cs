@@ -164,12 +164,12 @@ namespace client
                 foreach (var post in posts)
                 {
                     _logger.Write($"Username: {post.Username}\n");
-                    _logger.Write($"PostID: {post.Id}\n");
+                    _logger.Write($"PostIDs: {post.Id}\n");
                     _logger.Write($"Post: {post.Body}\n");
                     _logger.Write($"Timestamp: {post.CreatedAt}\n\n");
                 }
             }
-            if(type == MessageType.NewPost)
+            if (type == MessageType.NewPost)
             {
                 if (onSendNewPost != null) onSendNewPost();
                 var post = CayGetirProtocol.ParseNewPost(incomingMessage);
@@ -224,7 +224,7 @@ namespace client
         {
             while (connected)
             {
-                try
+                //try
                 {
                     Byte[] buffer = new Byte[8];
                     string message = "";
@@ -244,22 +244,22 @@ namespace client
                         buffer = new Byte[8];
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (!terminating)
-                    {
-                        _logger.Write("Server has disconnected.\n");
-                    }
-                    else
-                    {
-                        terminating = false;
-                    }
+                //catch (Exception ex)
+                //{
+                //    if (!terminating)
+                //    {
+                //        _logger.Write("Server has disconnected.\n");
+                //    }
+                //    else
+                //    {
+                //        terminating = false;
+                //    }
 
-                    clientSocket.Close();
-                    connected = false;
-                    if (onDisconnect != null) onDisconnect();
-                    _logger.Write("Succesfully disconnected!\n");
-                }
+                //    clientSocket.Close();
+                //    connected = false;
+                //    if (onDisconnect != null) onDisconnect();
+                //    _logger.Write("Succesfully disconnected!\n");
+                //}
             }
         }
     }

@@ -30,10 +30,23 @@ namespace client
             return $"Cay Getir 1.0\ntype=login\nusername={username}";
         }
 
-        public static string NewPost(Int32 id, string username, string body, DateTime createdAt)
+        public static string NewPost(int id, string username, string body, DateTime createdAt)
         {
-            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\nbody={body}\ncreatedAt={createdAt.ToString()}";
+            return $"Cay Getir 1.0\ntype=newpost\nid={id.ToString()}\nusername={username}\ntimestamp={createdAt.ToString()}\nbody={body}";
         }
+
+        public static string Posts(IEnumerable<Post> posts)
+        {
+            var str = $"Cay Getir 1.0\ntype=posts\n";
+
+            foreach (var post in posts)
+            {
+                str += $"id={post.Id}&username={post.Username}&timestamp={post.CreatedAt.ToString()}&body={post.Body}\n";
+            }
+
+            return str;
+        }
+
         public static string RequestPosts(string username)
         {
             return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
@@ -59,11 +72,6 @@ namespace client
                 return MessageType.Login;
             }
 
-            if (type == "error")
-            {
-                return MessageType.Error;
-            }
-
             if (type == "newpost")
             {
                 return MessageType.NewPost;
@@ -74,12 +82,37 @@ namespace client
                 return MessageType.Posts;
             }
 
+            if (type == "error")
+            {
+                return MessageType.Error;
+            }
+
             if (type == "request_posts")
             {
                 return MessageType.RequestPosts;
             }
 
             return MessageType.Message;
+        }
+
+        public static User ParseUser(string message)
+        {
+            var user = new User();
+            var lines = message.Split(new char[] { '\n' });
+
+            user.Name = lines[2].Substring(5);
+            user.Surname = lines[3].Substring(8);
+            user.Username = lines[4].Substring(9);
+            user.Password = lines[5].Substring(9);
+
+            return user;
+        }
+
+        public static string ParseUserName(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            return lines[2].Substring(9);
         }
 
         public static string ParseMessage(string message)
@@ -95,20 +128,31 @@ namespace client
 
             return lines[2].Substring(8);
         }
-
+        
         public static Post ParseNewPost(string message)
         {
-            var post = new Post();
             var lines = message.Split(new char[] { '\n' });
 
-            post.Id = Int32.Parse(lines[2].Substring(3));
-            post.Username = lines[3].Substring(9);
-            post.Body = lines[4].Substring(5);
-            post.CreatedAt = DateTime.Parse(lines[5].Substring(10));
+            var re = new Regex(@"Cay Getir 1.0\ntype=newpost\nid=(.*)\nusername=(.*)\ntimestamp=(.*)\nbody=([\S\s]*)");
+            var groups = re.Matches(message);
+            var post = new Post
+            {
+                Id = Int32.Parse(groups[0].Groups[1].Value),
+                Username = groups[0].Groups[2].Value,
+                CreatedAt = DateTime.Parse(groups[0].Groups[3].Value),
+                Body = groups[0].Groups[4].Value,
+            };
 
             return post;
         }
 
+        public static string ParseRequestPosts(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+
+            return lines[2].Substring(9);
+        }
+        
         public static IEnumerable<Post> ParsePosts(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -137,7 +181,6 @@ namespace client
             }
 
             return posts;
-
         }
     }
 
