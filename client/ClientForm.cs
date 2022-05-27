@@ -28,7 +28,7 @@ namespace client
             _client.OnDisconnect(() =>
             {
                 connectBox.Enabled = true;
-                newPostBox.Enabled = false;
+                tabControl1.Enabled = false;
                 disconnectButton.Enabled = false;
             });
 
@@ -44,14 +44,14 @@ namespace client
                 userNameInput.Text = "";
                 connectBox.Enabled = false;
                 disconnectButton.Enabled = true;
-                newPostBox.Enabled = true;
+                tabControl1.Enabled = true;
             });
 
             _client.OnUsernameNotExists(() =>
             {
                 userNameInput.Text = "";
                 connectBox.Enabled = true;
-                newPostBox.Enabled = false;
+                tabControl1.Enabled = false;
             });
 
             _client.OnSendNewPost(() =>
@@ -72,29 +72,11 @@ namespace client
         {
             bool flag = true;
 
-            //if (nameInput.Text == "")
-            //{
-            //    _logger.Write("Please enter a name\n");
-            //    flag = false;
-            //}
-
-            //if (surnameinput.text == "")
-            //{
-            //    _logger.write("please enter a surname\n");
-            //    flag = false;
-            //}
-
             if (userNameInput.Text == "")
             {
                 _logger.Write("Please enter a username\n");
                 flag = false;
             }
-
-            //if (passwordInput.Text == "")
-            //{
-            //    _logger.Write("Please enter a password\n");
-            //    flag = false;
-            //}
 
             return flag;
         }
