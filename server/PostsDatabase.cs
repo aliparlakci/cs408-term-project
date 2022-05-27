@@ -35,5 +35,18 @@ namespace server
             }
             InsertItem(post);
         }
+        public bool DeletePost(DeletePostRequest request)
+        {
+            var result = UpdateItem(
+                item =>
+                {
+                    item.isActive = false;
+                    return item;
+                },
+                item => item.Id == request.Id && item.Username == request.Username
+            );
+
+            return result > 0;
+        }
     }
 }

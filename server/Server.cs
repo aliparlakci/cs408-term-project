@@ -193,6 +193,35 @@ namespace server
                 _logger.Write($"Showed all posts for {username}\n");
                 SendPosts(client, username);
             }
+            else if (type == MessageType.DeletePost)
+            {
+                var deleteRequest = CayGetirProtocol.ParseDeletePost(message);
+                if (_postDb.Exists(item => item.Id == deleteRequest.Id))
+                {
+                    _logger.Write($"{deleteRequest.Username} tried to delete post with ID: {deleteRequest.Id}. However it does not exist!\n");
+                    string errorMessage = $"There is no post with ID: {deleteRequest.Id}";
+                    var response = CayGetirProtocol.Message(errorMessage);
+                    Send(client.Socket, response);
+                }
+                else
+                {
+                    if (!_postDb.DeletePost(deleteRequest))
+                    {
+                        _logger.Write($"Post with ID {deleteRequest.Id} does not belong to {deleteRequest.Username}\n");
+                        string errorMessage = $"Post with ID {deleteRequest.Id} is not yours";
+                        var response = CayGetirProtocol.Message(errorMessage);
+                        Send(client.Socket, response);
+                    }
+                    else
+                    {
+                        _logger.Write($"{deleteRequest.Username} deleted the post with ID {deleteRequest.Id}");
+                        string successMessage = $"Post with ID {deleteRequest.Id} deleted successfully";
+                        var response = CayGetirProtocol.Message(successMessage);
+                        Send(client.Socket, response);
+                    }
+
+                }
+            }
         }
 
         private void SendPosts(Client client, string username)
