@@ -53,6 +53,7 @@
     <Compile Include="CayGetirProtocol.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="DeletePostRequest.cs" />
     <Compile Include="Friendship.cs" />
     <Compile Include="FriendshipDatabase.cs" />
     <Compile Include="Logger.cs" />

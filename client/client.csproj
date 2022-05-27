@@ -54,6 +54,7 @@
     <Compile Include="ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DeletePostRequest.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Program.cs" />
