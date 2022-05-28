@@ -226,48 +226,53 @@ namespace server
             }
             else if (type == MessageType.AddFriend)
             {
-                var request = CayGetirProtocol.ParseAddFriend(message);
-
-                if (!_userDb.Exists(user => user == request))
-                {
-                    Send(client.Socket, CayGetirProtocol.Error($"Person with username {request} does not exists"));
-                    return;
-                }
-
-                var success = _friendshipDb.AddFriendship(client.Username, request);
-                if (success)
-                {
-                    Send(client.Socket, CayGetirProtocol.Message($"You successfully added {request} as your friend"));
-                }
-                else
-                {
-                    Send(client.Socket, CayGetirProtocol.Error($"{request} is already your friend"));
-                }
-                BroadcastFriendsList();
+                var username = CayGetirProtocol.ParseAddFriend(message);
+                AddFriend(client, username);
             }
             else if (type == MessageType.RemoveFriend)
             {
-                var request = CayGetirProtocol.ParseRemoveFriend(message);
-                if (!_userDb.Exists(user => user == request))
-                {
-                    Send(client.Socket, CayGetirProtocol.Error($"Person with username {request} does not exists"));
-                    return;
-                }
+                var username = CayGetirProtocol.ParseRemoveFriend(message);
+                RemoveFriend(client, username);
+            }
+        }
 
-                if (!_friendshipDb.Has(client.Username, request))
-                {
-                    Send(client.Socket, CayGetirProtocol.Error($"{request} is not your friend!"));
-                    return;
-                }
-
-                var success = _friendshipDb.RemoveFriendship(client.Username, request);
-                if (success)
-                {
-                    Send(client.Socket, CayGetirProtocol.Message($"You successfully removed {request} from your friends"));
-                }
-                BroadcastFriendsList();
+        private void AddFriend(Client client, string username)
+        {
+            if (!_userDb.Exists(user => user == username))
+            {
+                Send(client.Socket, CayGetirProtocol.Error($"Person with username {username} does not exists"));
+                _logger.Write($"{client.Username} tried to add {username} as their friend but {username} does not exist!");
+                return;
             }
 
+            var success = _friendshipDb.AddFriendship(client.Username, username);
+            if (success)
+            {
+                Send(client.Socket, CayGetirProtocol.Message($"You successfully added {username} as your friend"));
+                _logger.Write($"{client.Username} added {username} as their friend.\n");
+            }
+            else
+            {
+                Send(client.Socket, CayGetirProtocol.Error($"{username} is already your friend"));
+                _logger.Write($"{client.Username} tried to add {username} as their friend but {username} is already their friend!\n");
+            }
+            BroadcastFriendsList();
+        }
+
+        private void RemoveFriend(Client client, string username)
+        {
+            var success = _friendshipDb.RemoveFriendship(client.Username, username);
+            if (success)
+            {
+                Send(client.Socket, CayGetirProtocol.Message($"You successfully removed {username} from your friends"));
+                _logger.Write($"{client.Username} removed {username} from their friends.\n");
+            }
+            else
+            {
+                Send(client.Socket, CayGetirProtocol.Error($"{username} is not your friend!"));
+                _logger.Write($"{client.Username} tried to unfriend {username} but {username} is not their friend!\n");
+            }
+            BroadcastFriendsList();
         }
 
         private void DeletePost(Client client, int deleteRequestId)
