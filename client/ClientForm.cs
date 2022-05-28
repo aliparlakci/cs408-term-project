@@ -119,5 +119,43 @@ namespace client
         {
             _client.SendNewPost(postContentBox.Text);
         }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            int id;
+            if (Int32.TryParse(deletePostInput.Text, out id))
+            {
+                _client.DeletePost(id);
+            }
+            else
+            {
+                _logger.Write("Post ID must be integer!\n");
+           
+            }
+        }
+
+        private void myPostsButton_Click(object sender, EventArgs e)
+        {
+            _client.RequestMyPosts();
+        }
+
+        private void archiveButton_Click(object sender, EventArgs e)
+        {
+            _client.RequestMyArchive();
+        }
+
+        private void Activate_Click(object sender, EventArgs e)
+        {
+            int id;
+            if (Int32.TryParse(activatePostInput.Text, out id))
+            {
+                _client.ActivatePost(id);
+            }
+            else
+            {
+                _logger.Write("Post ID must be integer!\n");
+
+            }
+        }
     }
 }

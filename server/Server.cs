@@ -180,38 +180,107 @@ namespace server
             }
             else if (type == MessageType.RequestPosts)
             {
-                var username = CayGetirProtocol.ParseRequestPosts(message);
-                _logger.Write($"Showed all posts for {username}\n");
-                SendPosts(client, username);
+                Send(client.Socket, CayGetirProtocol.Message("Showing all posts from clients:"));
+                _logger.Write($"Showed all posts for {client.Username}\n");
+                SendPosts(client, client.Username);
             }
+
+            else if (type == MessageType.RequestMyPosts)
+            {
+                Send(client.Socket, CayGetirProtocol.Message("Showing your posts:"));
+                _logger.Write($"Showed {client.Username}'s posts\n");
+                SendOwnPosts(client, client.Username);
+            }
+            else if (type == MessageType.RequestMyArchive)
+            {
+                Send(client.Socket, CayGetirProtocol.Message("Showing your archive:"));
+                _logger.Write($"Showed {client.Username}'s archive\n");
+                SendOwnArchive(client, client.Username);
+            }
+
             else if (type == MessageType.DeletePost)
             {
-                var deleteRequest = CayGetirProtocol.ParseDeletePost(message);
-                if (_postDb.Exists(item => item.Id == deleteRequest.Id))
+                var deleteRequestId = CayGetirProtocol.ParsePostActionRequest(message);
+                DeletePost(client, deleteRequestId);
+            }
+            else if (type == MessageType.ActivatePost)
+            {
+                var deleteRequestId = CayGetirProtocol.ParsePostActionRequest(message);
+                ActivatePost(client, deleteRequestId);
+            }
+
+        }
+
+        private void DeletePost(Client client, int deleteRequestId)
+        {
+            var post = _postDb.GetPostById(deleteRequestId);
+            if (!_postDb.Exists(item => item.Id == deleteRequestId))
+            {
+                _logger.Write($"{client.Username} tried to delete post with ID: {deleteRequestId}. However it does not exist!\n");
+                string errorMessage = $"There is no post with ID: {deleteRequestId}";
+                var response = CayGetirProtocol.Message(errorMessage);
+                Send(client.Socket, response);
+            }
+            else if (!post.isActive)
+            {
+                _logger.Write($"{client.Username} tried to delete post with ID: {deleteRequestId}. However, it has been already deleted!\n");
+                string errorMessage = $"Post with ID {deleteRequestId} has been already deleted!";
+                var response = CayGetirProtocol.Message(errorMessage);
+                Send(client.Socket, response);
+            }
+            else
+            {
+                if (!_postDb.DeletePost(deleteRequestId, client.Username))
                 {
-                    _logger.Write($"{deleteRequest.Username} tried to delete post with ID: {deleteRequest.Id}. However it does not exist!\n");
-                    string errorMessage = $"There is no post with ID: {deleteRequest.Id}";
+                    _logger.Write($"Post with ID {deleteRequestId} does not belong to {client.Username}\n");
+                    string errorMessage = $"Post with ID {deleteRequestId} is not yours!";
                     var response = CayGetirProtocol.Message(errorMessage);
                     Send(client.Socket, response);
                 }
                 else
                 {
-                    if (!_postDb.DeletePost(deleteRequest))
-                    {
-                        _logger.Write($"Post with ID {deleteRequest.Id} does not belong to {deleteRequest.Username}\n");
-                        string errorMessage = $"Post with ID {deleteRequest.Id} is not yours";
-                        var response = CayGetirProtocol.Message(errorMessage);
-                        Send(client.Socket, response);
-                    }
-                    else
-                    {
-                        _logger.Write($"{deleteRequest.Username} deleted the post with ID {deleteRequest.Id}");
-                        string successMessage = $"Post with ID {deleteRequest.Id} deleted successfully";
-                        var response = CayGetirProtocol.Message(successMessage);
-                        Send(client.Socket, response);
-                    }
-
+                    _logger.Write($"{client.Username} deleted the post with ID {deleteRequestId}\n");
+                    string successMessage = $"Post with ID {deleteRequestId} deleted successfully";
+                    var response = CayGetirProtocol.Message(successMessage);
+                    Send(client.Socket, response);
                 }
+
+            }
+        }
+        private void ActivatePost(Client client, int activateRequestId)
+        {
+            var post = _postDb.GetPostById(activateRequestId);
+            if (!_postDb.Exists(item => item.Id == activateRequestId))
+            {
+                _logger.Write($"{client.Username} tried to activate post with ID: {activateRequestId}. However it does not exist!\n");
+                string errorMessage = $"There is no post with ID: {activateRequestId}";
+                var response = CayGetirProtocol.Message(errorMessage);
+                Send(client.Socket, response);
+            }
+            else if (post.isActive)
+            {
+                _logger.Write($"{client.Username} tried to activate post with ID: {activateRequestId}. However, it is active!\n");
+                string errorMessage = $"Post with ID {activateRequestId} has been already active!";
+                var response = CayGetirProtocol.Message(errorMessage);
+                Send(client.Socket, response);
+            }
+            else
+            {
+                if (!_postDb.ActivatePost(activateRequestId, client.Username))
+                {
+                    _logger.Write($"Post with ID {activateRequestId} does not belong to {client.Username}\n");
+                    string errorMessage = $"Post with ID {activateRequestId} is not yours";
+                    var response = CayGetirProtocol.Message(errorMessage);
+                    Send(client.Socket, response);
+                }
+                else
+                {
+                    _logger.Write($"{client.Username} activated the post with ID {activateRequestId}\n");
+                    string successMessage = $"Post with ID {activateRequestId} activated successfully";
+                    var response = CayGetirProtocol.Message(successMessage);
+                    Send(client.Socket, response);
+                }
+
             }
         }
 
@@ -222,6 +291,18 @@ namespace server
             Send(client.Socket, response);
         }
 
+        private void SendOwnPosts(Client client, string username)
+        {
+            var posts = _postDb.GetPostsOfUsername(username);
+            var response = CayGetirProtocol.Posts(posts);
+            Send(client.Socket, response);
+        }
+        private void SendOwnArchive(Client client, string username)
+        {
+            var posts = _postDb.GetArchiveOfUsername(username);
+            var response = CayGetirProtocol.Posts(posts);
+            Send(client.Socket, response);
+        }
         public void Dispose()
         {
             listening = false;

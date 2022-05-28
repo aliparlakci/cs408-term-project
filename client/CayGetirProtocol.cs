@@ -47,14 +47,28 @@ namespace client
             return str;
         }
 
-        public static string RequestPosts(string username)
+        public static string RequestPosts()
         {
-            return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
+            return $"Cay Getir 1.0\ntype=request_posts";
         }
 
-        public static string DeletePost(int id, string username)
+        public static string RequestMyPosts()
         {
-            return $"Cay Getir 1.0\ntype =delete_post\nid={id.ToString()}\nusername={username}";
+            return $"Cay Getir 1.0\ntype=request_my_posts";
+        }
+
+        public static string RequestMyArchive()
+        {
+            return $"Cay Getir 1.0\ntype=request_my_archive";
+        }
+
+        public static string DeletePost(int id)
+        {
+            return $"Cay Getir 1.0\ntype=delete_post\nid={id.ToString()}";
+        }
+        public static string ActivatePost(int id)
+        {
+            return $"Cay Getir 1.0\ntype=activate_post\nid={id.ToString()}";
         }
 
         public static MessageType DetermineType(string message)
@@ -100,7 +114,19 @@ namespace client
             {
                 return MessageType.DeletePost;
             }
-
+            if (type == "activate_post")
+            {
+                return MessageType.ActivatePost;
+            }
+            if (type == "request_my_posts")
+            {
+                return MessageType.RequestMyPosts;
+            }
+            if (type == "request_my_archive")
+            {
+                return MessageType.RequestMyArchive;
+            }
+            
 
             return MessageType.Message;
         }
@@ -156,13 +182,6 @@ namespace client
             return post;
         }
 
-        public static string ParseRequestPosts(string message)
-        {
-            var lines = message.Split(new char[] { '\n' });
-
-            return lines[2].Substring(9);
-        }
-        
         public static IEnumerable<Post> ParsePosts(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -192,16 +211,12 @@ namespace client
 
             return posts;
         }
-        public static DeletePostRequest ParseDeletePost(string message)
+        public static int ParsePostActionRequest(string message)
         {
             var lines = message.Split(new char[] { '\n' });
-            var request = new DeletePostRequest();
-            request.Id = Int32.Parse(lines[2].Substring(3));
-            request.Username = lines[3].Substring(9);
-            return request;
+            var id = Int32.Parse(lines[2].Substring(3));
+            return id;
         }
-
-
     }
 
     public enum MessageType
@@ -213,6 +228,9 @@ namespace client
         NewPost,
         Posts,
         RequestPosts,
-        DeletePost
+        RequestMyPosts,
+        RequestMyArchive,
+        DeletePost,
+        ActivatePost
     }
 }

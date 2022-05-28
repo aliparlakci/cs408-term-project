@@ -88,10 +88,21 @@ namespace client
 
         public void RequestPosts()
         {
-            var message = CayGetirProtocol.RequestPosts(_username);
+            var message = CayGetirProtocol.RequestPosts();
             Send(message);
         }
 
+        public void RequestMyPosts()
+        {
+            var message = CayGetirProtocol.RequestMyPosts();
+            Send(message);
+        }
+
+        public void RequestMyArchive()
+        {
+            var message = CayGetirProtocol.RequestMyArchive();
+            Send(message);
+        }
         public void SendNewPost(string body)
         {
             var message = CayGetirProtocol.NewPost(0, _username, body, DateTime.Now);
@@ -100,7 +111,12 @@ namespace client
 
         public void DeletePost(int id)
         {
-            var message = CayGetirProtocol.DeletePost(id, _username);
+            var message = CayGetirProtocol.DeletePost(id);
+            Send(message);
+        }
+        public void ActivatePost(int id)
+        {
+            var message = CayGetirProtocol.ActivatePost(id);
             Send(message);
         }
 
@@ -166,7 +182,6 @@ namespace client
             {
                 var posts = CayGetirProtocol.ParsePosts(incomingMessage);
 
-                _logger.Write("\nShowing all posts from clients:\n");
                 foreach (var post in posts)
                 {
                     _logger.Write($"Username: {post.Username}\n");

@@ -15,7 +15,17 @@ namespace server
         public IEnumerable<Post> GetPostsExceptUsername(string username)
         {
             ReadFile();
-            return base.items.Where(item => item.Username != username);
+            return base.items.Where(item => item.Username != username && item.isActive);
+        }
+        public IEnumerable<Post> GetPostsOfUsername(string username)
+        {
+            ReadFile();
+            return base.items.Where(item => item.Username == username && item.isActive);
+        }
+        public IEnumerable<Post> GetArchiveOfUsername(string username)
+        {
+            ReadFile();
+            return base.items.Where(item => item.Username == username && !item.isActive);
         }
 
         public IEnumerable<Post> GetPostsOfUsers(IEnumerable<User> users)
@@ -35,7 +45,7 @@ namespace server
             }
             InsertItem(post);
         }
-        public bool DeletePost(DeletePostRequest request)
+        public bool DeletePost(int id, string username)
         {
             var result = UpdateItem(
                 item =>
@@ -43,10 +53,27 @@ namespace server
                     item.isActive = false;
                     return item;
                 },
-                item => item.Id == request.Id && item.Username == request.Username
+                item => item.Id == id && item.Username == username
             );
 
             return result > 0;
+        }
+        public bool ActivatePost(int id, string username)
+        {
+            var result = UpdateItem(
+                item =>
+                {
+                    item.isActive = true;
+                    return item;
+                },
+                item => item.Id == id && item.Username == username
+            );
+
+            return result > 0;
+        }
+        public Post GetPostById(int id)
+        {
+            return base.items.Where(item => item.Id == id).First(); 
         }
     }
 }
