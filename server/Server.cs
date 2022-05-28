@@ -240,8 +240,8 @@ namespace server
         {
             if (!_userDb.Exists(user => user == username))
             {
-                Send(client.Socket, CayGetirProtocol.Error($"Person with username {username} does not exists"));
-                _logger.Write($"{client.Username} tried to add {username} as their friend but {username} does not exist!");
+                Send(client.Socket, CayGetirProtocol.Message($"Person with username {username} does not exists"));
+                _logger.Write($"{client.Username} tried to add {username} as their friend but {username} does not exist!\n");
                 return;
             }
 
@@ -253,7 +253,7 @@ namespace server
             }
             else
             {
-                Send(client.Socket, CayGetirProtocol.Error($"{username} is already your friend"));
+                Send(client.Socket, CayGetirProtocol.Message($"{username} is already your friend"));
                 _logger.Write($"{client.Username} tried to add {username} as their friend but {username} is already their friend!\n");
             }
             BroadcastFriendsList();
@@ -269,7 +269,7 @@ namespace server
             }
             else
             {
-                Send(client.Socket, CayGetirProtocol.Error($"{username} is not your friend!"));
+                Send(client.Socket, CayGetirProtocol.Message($"{username} is not your friend!"));
                 _logger.Write($"{client.Username} tried to unfriend {username} but {username} is not their friend!\n");
             }
             BroadcastFriendsList();

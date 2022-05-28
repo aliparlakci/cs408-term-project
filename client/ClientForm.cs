@@ -174,7 +174,10 @@ namespace client
 
         private void removeFriendButton_Click(object sender, EventArgs e)
         {
-            _client.RemoveFriend(friendsListBox.SelectedItem.ToString());
+            if(friendsListBox.SelectedItem != null)
+            {
+                _client.RemoveFriend(friendsListBox.SelectedItem.ToString());
+            }
         }
 
         private void addFriend_Click(object sender, EventArgs e)
