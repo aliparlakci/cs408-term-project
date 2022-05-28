@@ -104,6 +104,12 @@ namespace client
             Send(message);
         }
 
+        public void RemoveFriend(string username)
+        {
+            var message = CayGetirProtocol.RemoveFriend(username);
+            Send(message);
+        }
+
         public void SendNewPost(string body)
         {
             var message = CayGetirProtocol.NewPost(0, _username, body, DateTime.Now);

@@ -225,16 +225,39 @@ namespace server
             else if (type == MessageType.AddFriend)
             {
                 var request = CayGetirProtocol.ParseAddFriend(message);
+
+                if (!_userDb.Exists(user => user == request))
+                {
+                    Send(client.Socket, CayGetirProtocol.Error($"Person with username {request} does not exists"));
+                    return;
+                }
+
                 var success = _friendshipDb.AddFriendship(client.Username, request);
                 if (success)
                 {
                     Send(client.Socket, CayGetirProtocol.Message($"You successfully added {request} as your friend"));
+                }
+                else
+                {
+                    Send(client.Socket, CayGetirProtocol.Error($"{request} is already your friend"));
                 }
                 BroadcastFriendsList();
             }
             else if (type == MessageType.RemoveFriend)
             {
                 var request = CayGetirProtocol.ParseRemoveFriend(message);
+                if (!_userDb.Exists(user => user == request))
+                {
+                    Send(client.Socket, CayGetirProtocol.Error($"Person with username {request} does not exists"));
+                    return;
+                }
+
+                if (!_friendshipDb.Has(client.Username, request))
+                {
+                    Send(client.Socket, CayGetirProtocol.Error($"{request} is not your friend!"));
+                    return;
+                }
+
                 var success = _friendshipDb.RemoveFriendship(client.Username, request);
                 if (success)
                 {
