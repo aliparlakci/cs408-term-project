@@ -25,6 +25,7 @@ namespace client
         private Action onUsernameNotExists;
         private Action onConnect;
         private Action onSendNewPost;
+        private Action<IEnumerable<string>> onSetFriends;
 
         public Client(Logger logger)
         {
@@ -61,6 +62,11 @@ namespace client
             onSendNewPost = func;
         }
 
+        public void OnSetFriends(Action<IEnumerable<string>> func)
+        {
+            onSetFriends = func;
+        }
+
         public void SetTerminating() { terminating = true; }
 
         public void Connect(string ip, int port, string username)
@@ -89,6 +95,12 @@ namespace client
         public void RequestPosts()
         {
             var message = CayGetirProtocol.RequestPosts(_username);
+            Send(message);
+        }
+
+        public void AddFriend(string username)
+        {
+            var message = CayGetirProtocol.AddFriend(username);
             Send(message);
         }
 
@@ -175,12 +187,19 @@ namespace client
                     _logger.Write($"Timestamp: {post.CreatedAt}\n\n");
                 }
             }
+
             if (type == MessageType.NewPost)
             {
                 if (onSendNewPost != null) onSendNewPost();
                 var post = CayGetirProtocol.ParseNewPost(incomingMessage);
                 _logger.Write("\nYou have successfull sent a post!\n");
                 _logger.Write($"{post.Username}: {post.Body}\n");
+            }
+
+            if (type == MessageType.Friends)
+            {
+                var friends = CayGetirProtocol.ParseFriends(incomingMessage);
+                if (onSendNewPost != null) onSetFriends(friends);
             }
         }
 

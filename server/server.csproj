@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddFriendRequest.cs" />
     <Compile Include="CayGetirProtocol.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Database.cs" />

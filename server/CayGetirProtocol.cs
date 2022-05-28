@@ -52,9 +52,36 @@ namespace server
             return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
         }
 
+        public static string RequestFriends(string username)
+        {
+            return $"Cay Getir 1.0\ntype=request_friends";
+        }
+
         public static string DeletePost(int id, string username)
         {
             return $"Cay Getir 1.0\ntype =delete_post\nid={id.ToString()}\nusername={username}";
+        }
+
+        public static string AddFriend(string friend)
+        {
+            return $"Cay Getir 1.0\ntype=add_friend\nfriend={friend}";
+        }
+
+        public static string RemoveFriend(string friend)
+        {
+            return $"Cay Getir 1.0\ntype=remove_friend\nfriend={friend}";
+        }
+
+        public static string Friends(IEnumerable<string> friends)
+        {
+            var str = $"Cay Getir 1.0\ntype=friends\n";
+
+            foreach (var friend in friends)
+            {
+                str += $"username={friend}\n";
+            }
+
+            return str;
         }
 
         public static MessageType DetermineType(string message)
@@ -96,10 +123,32 @@ namespace server
             {
                 return MessageType.RequestPosts;
             }
+
+            if (type == "request_friends")
+            {
+                return MessageType.RequestFriends;
+            }
+
             if (type == "delete_post")
             {
                 return MessageType.DeletePost;
             }
+
+            if (type == "friends")
+            {
+                return MessageType.Friends;
+            }
+
+            if (type == "add_friend")
+            {
+                return MessageType.AddFriend;
+            }
+
+            if (type == "remove_friend")
+            {
+                return MessageType.RemoveFriend;
+            }
+
 
             return MessageType.Message;
         }
@@ -171,14 +220,14 @@ namespace server
             {
                 try
                 {
-                    var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
+                    var re = new Regex(@"id=(.*)&username=(.*)&timestamp=(.*)&body=([\S\s]*)");
                     var groups = re.Matches(line);
                     var post = new Post
                     {
                         Id = Int32.Parse(groups[0].Groups[1].Value),
                         Username = groups[0].Groups[2].Value,
-                        Body = groups[0].Groups[3].Value,
-                        CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
+                        CreatedAt = DateTime.Parse(groups[0].Groups[3].Value),
+                        Body = groups[0].Groups[4].Value,
                     };
 
                     posts.Add(post);
@@ -191,6 +240,29 @@ namespace server
 
             return posts;
         }
+
+        public static IEnumerable<string> ParseFriends(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+            var friends = new List<string> { };
+
+            foreach (var line in lines.Skip(2))
+            {
+                try
+                {
+                    var re = new Regex(@"username=(.*)");
+                    var groups = re.Matches(line);
+                    friends.Add(groups[0].Groups[1].Value);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    continue;
+                }
+            }
+
+            return friends;
+        }
+
         public static DeletePostRequest ParseDeletePost(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -198,6 +270,22 @@ namespace server
             request.Id = Int32.Parse(lines[2].Substring(3));
             request.Username = lines[3].Substring(9);
             return request;
+        }
+
+        public static string ParseAddFriend(string message)
+        {
+            var re = new Regex(@"Cay Getir 1.0\ntype=add_friend\nfriend=(.*)");
+            var groups = re.Matches(message);
+
+            return groups[0].Groups[1].Value;
+        }
+
+        public static string ParseRemoveFriend(string message)
+        {
+            var re = new Regex(@"Cay Getir 1.0\ntype=remove_friend\nfriend=(.*)");
+            var groups = re.Matches(message);
+
+            return groups[0].Groups[1].Value;
         }
     }
 
@@ -210,6 +298,10 @@ namespace server
         NewPost,
         Posts,
         RequestPosts,
-        DeletePost
+        DeletePost,
+        RequestFriends,
+        Friends,
+        AddFriend,
+        RemoveFriend,
     }
 }

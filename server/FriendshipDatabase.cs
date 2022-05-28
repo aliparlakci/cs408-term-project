@@ -26,9 +26,9 @@ namespace server
             return base.Exists(friendship => friendship == new Friendship { username1 = username1, username2 = username2 });
         }
 
-        public void Remove(string username1, string username2)
+        public bool RemoveFriendship(string username1, string username2)
         {
-            base.RemoveItem(friendship => friendship == new Friendship { username1 = username1, username2 = username2 });
+            return base.RemoveItem(friendship => friendship == new Friendship { username1 = username1, username2 = username2 });
         }
 
         public IEnumerable<string> GetFriendsOf(string username)

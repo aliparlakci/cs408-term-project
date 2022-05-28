@@ -14,6 +14,7 @@ namespace server
     {
         private UsersDatabase _userDb;
         private PostsDatabase _postDb;
+        private FriendshipDatabase _friendshipDb;
         private Logger _logger;
 
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -22,10 +23,11 @@ namespace server
         bool terminating = false;
         bool listening = false;
 
-        public Server(UsersDatabase userDb, PostsDatabase postDb, Logger logger)
+        public Server(UsersDatabase userDb, PostsDatabase postDb, FriendshipDatabase friendshipDb, Logger logger)
         {
             _userDb = userDb;
             _postDb = postDb;
+            _friendshipDb = friendshipDb;
             _logger = logger;
         }
 
@@ -135,6 +137,8 @@ namespace server
         {
             bool connected = true;
 
+            SendFriends(client);
+
             while (connected && !terminating)
             {
                 try
@@ -213,6 +217,31 @@ namespace server
 
                 }
             }
+            else if (type == MessageType.RequestFriends)
+            {
+                var friends = _friendshipDb.GetFriendsOf(client.Username);
+                Send(client.Socket, CayGetirProtocol.Friends(friends));
+            }
+            else if (type == MessageType.AddFriend)
+            {
+                var request = CayGetirProtocol.ParseAddFriend(message);
+                var success = _friendshipDb.AddFriendship(client.Username, request);
+                if (success)
+                {
+                    Send(client.Socket, CayGetirProtocol.Message($"You successfully added {request} as your friend"));
+                }
+                BroadcastFriendsList();
+            }
+            else if (type == MessageType.RemoveFriend)
+            {
+                var request = CayGetirProtocol.ParseRemoveFriend(message);
+                var success = _friendshipDb.RemoveFriendship(client.Username, request);
+                if (success)
+                {
+                    Send(client.Socket, CayGetirProtocol.Message($"You successfully removed {request} from your friends"));
+                }
+                BroadcastFriendsList();
+            }
         }
 
         private void SendPosts(Client client, string username)
@@ -220,6 +249,18 @@ namespace server
             var posts = _postDb.GetPostsExceptUsername(username);
             var response = CayGetirProtocol.Posts(posts);
             Send(client.Socket, response);
+        }
+
+        private void BroadcastFriendsList()
+        {
+            clients.ForEach(SendFriends);
+        }
+
+        private void SendFriends(Client client)
+        {
+            var friends = _friendshipDb.GetFriendsOf(client.Username);
+            var message = CayGetirProtocol.Friends(friends);
+            Send(client.Socket, message);
         }
 
         public void Dispose()
