@@ -177,5 +177,10 @@ namespace client
             _client.AddFriend(addFriendInput.Text);
             addFriendInput.Text = "";
         }
+
+        private void friendsPostsButton_Click(object sender, EventArgs e)
+        {
+            _client.RequestFriendsPosts();
+        }
     }
 }

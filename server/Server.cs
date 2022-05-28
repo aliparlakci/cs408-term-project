@@ -202,6 +202,13 @@ namespace server
                 SendOwnArchive(client, client.Username);
             }
 
+            else if (type == MessageType.RequestFriendsPosts)
+            {
+                Send(client.Socket, CayGetirProtocol.Message("Showing your friends' posts:"));
+                _logger.Write($"Showed {client.Username}'s friends' posts:\n");
+                SendFriendsPosts(client, client.Username);
+            }
+
             else if (type == MessageType.DeletePost)
             {
                 var deleteRequestId = CayGetirProtocol.ParsePostActionRequest(message);
@@ -353,6 +360,14 @@ namespace server
         private void SendOwnArchive(Client client, string username)
         {
             var posts = _postDb.GetArchiveOfUsername(username);
+            var response = CayGetirProtocol.Posts(posts);
+            Send(client.Socket, response);
+        }
+
+        public void SendFriendsPosts(Client client, string username)
+        {
+            var friends = _friendshipDb.GetFriendsOf(username);
+            var posts = _postDb.GetPostsOfUsers(friends);
             var response = CayGetirProtocol.Posts(posts);
             Send(client.Socket, response);
         }

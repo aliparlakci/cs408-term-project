@@ -67,6 +67,11 @@ namespace server
             return $"Cay Getir 1.0\ntype=request_my_archive";
         }
 
+        public static string RequestFriendsPosts()
+        {
+            return $"Cay Getir 1.0\ntype=request_friends_posts";
+        }
+
         public static string DeletePost(int id)
         {
             return $"Cay Getir 1.0\ntype=delete_post\nid={id.ToString()}";
@@ -163,7 +168,12 @@ namespace server
             {
                 return MessageType.RequestMyArchive;
             }
-            
+
+            if (type == "request_friends_posts")
+            {
+                return MessageType.RequestFriendsPosts;
+            }
+
             if (type == "friends")
             {
                 return MessageType.Friends;
@@ -321,6 +331,7 @@ namespace server
         RequestPosts,
         RequestMyPosts,
         RequestMyArchive,
+        RequestFriendsPosts,
         RequestFriends,
         ActivatePost,
         DeletePost,

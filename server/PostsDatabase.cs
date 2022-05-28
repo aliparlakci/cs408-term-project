@@ -28,9 +28,9 @@ namespace server
             return base.items.Where(item => item.Username == username && !item.isActive);
         }
 
-        public IEnumerable<Post> GetPostsOfUsers(IEnumerable<User> users)
+        public IEnumerable<Post> GetPostsOfUsers(IEnumerable<string> users)
         {
-            return base.items.Where(item => users.Select(user => user.Username).Contains(item.Username));
+            return base.items.Where(item => users.Contains(item.Username) && item.isActive);
         }
 
         public void InsertPost(Post post)

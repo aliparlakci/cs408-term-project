@@ -411,6 +411,7 @@
             this.friendsPostsButton.TabIndex = 5;
             this.friendsPostsButton.Text = "Friends\' Posts";
             this.friendsPostsButton.UseVisualStyleBackColor = true;
+            this.friendsPostsButton.Click += new System.EventHandler(this.friendsPostsButton_Click);
             // 
             // ClientForm
             // 

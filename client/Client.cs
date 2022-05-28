@@ -109,7 +109,13 @@ namespace client
             var message = CayGetirProtocol.RequestMyArchive();
             Send(message);
         }
-        
+
+        public void RequestFriendsPosts()
+        {
+            var message = CayGetirProtocol.RequestFriendsPosts();
+            Send(message);
+        }
+
         public void AddFriend(string username)
         {
             var message = CayGetirProtocol.AddFriend(username);
