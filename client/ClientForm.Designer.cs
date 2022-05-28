@@ -48,23 +48,28 @@
             this.deletePostInput = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.friends = new System.Windows.Forms.TabPage();
+            this.addFriend = new System.Windows.Forms.Button();
+            this.addFriendInput = new System.Windows.Forms.TextBox();
+            this.removeFriendButton = new System.Windows.Forms.Button();
+            this.friendsListBox = new System.Windows.Forms.ListBox();
             this.posts = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.feed = new System.Windows.Forms.TabPage();
-            this.myPostsButton = new System.Windows.Forms.Button();
-            this.friendsPostsButton = new System.Windows.Forms.Button();
-            this.archiveButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Activate = new System.Windows.Forms.Button();
             this.activatePostInput = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.feed = new System.Windows.Forms.TabPage();
+            this.archiveButton = new System.Windows.Forms.Button();
+            this.myPostsButton = new System.Windows.Forms.Button();
+            this.friendsPostsButton = new System.Windows.Forms.Button();
             this.connectBox.SuspendLayout();
             this.newPostBox.SuspendLayout();
             this.deletePostBox.SuspendLayout();
+            this.friends.SuspendLayout();
             this.posts.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.feed.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // connectBox
@@ -255,13 +260,52 @@
             // 
             // friends
             // 
+            this.friends.Controls.Add(this.addFriend);
+            this.friends.Controls.Add(this.addFriendInput);
+            this.friends.Controls.Add(this.removeFriendButton);
+            this.friends.Controls.Add(this.friendsListBox);
             this.friends.Location = new System.Drawing.Point(4, 22);
             this.friends.Name = "friends";
             this.friends.Padding = new System.Windows.Forms.Padding(3);
-            this.friends.Size = new System.Drawing.Size(396, 267);
+            this.friends.Size = new System.Drawing.Size(396, 303);
             this.friends.TabIndex = 1;
             this.friends.Text = "Friends";
             this.friends.UseVisualStyleBackColor = true;
+            // 
+            // addFriend
+            // 
+            this.addFriend.Location = new System.Drawing.Point(226, 63);
+            this.addFriend.Name = "addFriend";
+            this.addFriend.Size = new System.Drawing.Size(135, 23);
+            this.addFriend.TabIndex = 3;
+            this.addFriend.Text = "Add Friend";
+            this.addFriend.UseVisualStyleBackColor = true;
+            this.addFriend.Click += new System.EventHandler(this.addFriend_Click);
+            // 
+            // addFriendInput
+            // 
+            this.addFriendInput.Location = new System.Drawing.Point(226, 37);
+            this.addFriendInput.Name = "addFriendInput";
+            this.addFriendInput.Size = new System.Drawing.Size(135, 20);
+            this.addFriendInput.TabIndex = 2;
+            // 
+            // removeFriendButton
+            // 
+            this.removeFriendButton.Location = new System.Drawing.Point(18, 229);
+            this.removeFriendButton.Name = "removeFriendButton";
+            this.removeFriendButton.Size = new System.Drawing.Size(162, 23);
+            this.removeFriendButton.TabIndex = 1;
+            this.removeFriendButton.Text = "Remove Friend";
+            this.removeFriendButton.UseVisualStyleBackColor = true;
+            this.removeFriendButton.Click += new System.EventHandler(this.removeFriendButton_Click);
+            // 
+            // friendsListBox
+            // 
+            this.friendsListBox.FormattingEnabled = true;
+            this.friendsListBox.Location = new System.Drawing.Point(18, 37);
+            this.friendsListBox.Name = "friendsListBox";
+            this.friendsListBox.Size = new System.Drawing.Size(162, 186);
+            this.friendsListBox.TabIndex = 0;
             // 
             // posts
             // 
@@ -275,60 +319,6 @@
             this.posts.TabIndex = 0;
             this.posts.Text = "Posts";
             this.posts.UseVisualStyleBackColor = true;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.feed);
-            this.tabControl1.Controls.Add(this.posts);
-            this.tabControl1.Controls.Add(this.friends);
-            this.tabControl1.Enabled = false;
-            this.tabControl1.Location = new System.Drawing.Point(12, 151);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(404, 329);
-            this.tabControl1.TabIndex = 4;
-            // 
-            // feed
-            // 
-            this.feed.Controls.Add(this.archiveButton);
-            this.feed.Controls.Add(this.myPostsButton);
-            this.feed.Controls.Add(this.friendsPostsButton);
-            this.feed.Controls.Add(this.requestPostButton);
-            this.feed.Location = new System.Drawing.Point(4, 22);
-            this.feed.Name = "feed";
-            this.feed.Size = new System.Drawing.Size(396, 290);
-            this.feed.TabIndex = 2;
-            this.feed.Text = "Feed";
-            this.feed.UseVisualStyleBackColor = true;
-            // 
-            // myPostsButton
-            // 
-            this.myPostsButton.Location = new System.Drawing.Point(23, 147);
-            this.myPostsButton.Name = "myPostsButton";
-            this.myPostsButton.Size = new System.Drawing.Size(350, 52);
-            this.myPostsButton.TabIndex = 6;
-            this.myPostsButton.Text = "My Posts";
-            this.myPostsButton.UseVisualStyleBackColor = true;
-            this.myPostsButton.Click += new System.EventHandler(this.myPostsButton_Click);
-            // 
-            // friendsPostsButton
-            // 
-            this.friendsPostsButton.Location = new System.Drawing.Point(23, 89);
-            this.friendsPostsButton.Name = "friendsPostsButton";
-            this.friendsPostsButton.Size = new System.Drawing.Size(350, 52);
-            this.friendsPostsButton.TabIndex = 5;
-            this.friendsPostsButton.Text = "Friends\' Posts";
-            this.friendsPostsButton.UseVisualStyleBackColor = true;
-            // 
-            // archiveButton
-            // 
-            this.archiveButton.Location = new System.Drawing.Point(23, 205);
-            this.archiveButton.Name = "archiveButton";
-            this.archiveButton.Size = new System.Drawing.Size(350, 52);
-            this.archiveButton.TabIndex = 7;
-            this.archiveButton.Text = "My Archive";
-            this.archiveButton.UseVisualStyleBackColor = true;
-            this.archiveButton.Click += new System.EventHandler(this.archiveButton_Click);
             // 
             // groupBox1
             // 
@@ -368,6 +358,60 @@
             this.label6.TabIndex = 0;
             this.label6.Text = "Post ID";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.feed);
+            this.tabControl1.Controls.Add(this.posts);
+            this.tabControl1.Controls.Add(this.friends);
+            this.tabControl1.Enabled = false;
+            this.tabControl1.Location = new System.Drawing.Point(12, 151);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(404, 329);
+            this.tabControl1.TabIndex = 4;
+            // 
+            // feed
+            // 
+            this.feed.Controls.Add(this.archiveButton);
+            this.feed.Controls.Add(this.myPostsButton);
+            this.feed.Controls.Add(this.friendsPostsButton);
+            this.feed.Controls.Add(this.requestPostButton);
+            this.feed.Location = new System.Drawing.Point(4, 22);
+            this.feed.Name = "feed";
+            this.feed.Size = new System.Drawing.Size(396, 303);
+            this.feed.TabIndex = 2;
+            this.feed.Text = "Feed";
+            this.feed.UseVisualStyleBackColor = true;
+            // 
+            // archiveButton
+            // 
+            this.archiveButton.Location = new System.Drawing.Point(23, 205);
+            this.archiveButton.Name = "archiveButton";
+            this.archiveButton.Size = new System.Drawing.Size(350, 52);
+            this.archiveButton.TabIndex = 7;
+            this.archiveButton.Text = "My Archive";
+            this.archiveButton.UseVisualStyleBackColor = true;
+            this.archiveButton.Click += new System.EventHandler(this.archiveButton_Click);
+            // 
+            // myPostsButton
+            // 
+            this.myPostsButton.Location = new System.Drawing.Point(23, 147);
+            this.myPostsButton.Name = "myPostsButton";
+            this.myPostsButton.Size = new System.Drawing.Size(350, 52);
+            this.myPostsButton.TabIndex = 6;
+            this.myPostsButton.Text = "My Posts";
+            this.myPostsButton.UseVisualStyleBackColor = true;
+            this.myPostsButton.Click += new System.EventHandler(this.myPostsButton_Click);
+            // 
+            // friendsPostsButton
+            // 
+            this.friendsPostsButton.Location = new System.Drawing.Point(23, 89);
+            this.friendsPostsButton.Name = "friendsPostsButton";
+            this.friendsPostsButton.Size = new System.Drawing.Size(350, 52);
+            this.friendsPostsButton.TabIndex = 5;
+            this.friendsPostsButton.Text = "Friends\' Posts";
+            this.friendsPostsButton.UseVisualStyleBackColor = true;
+            // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -388,11 +432,13 @@
             this.newPostBox.PerformLayout();
             this.deletePostBox.ResumeLayout(false);
             this.deletePostBox.PerformLayout();
+            this.friends.ResumeLayout(false);
+            this.friends.PerformLayout();
             this.posts.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.feed.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.feed.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -429,5 +475,9 @@
         private System.Windows.Forms.Button Activate;
         private System.Windows.Forms.TextBox activatePostInput;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button removeFriendButton;
+        private System.Windows.Forms.ListBox friendsListBox;
+        private System.Windows.Forms.Button addFriend;
+        private System.Windows.Forms.TextBox addFriendInput;
     }
 }

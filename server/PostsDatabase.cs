@@ -73,7 +73,14 @@ namespace server
         }
         public Post GetPostById(int id)
         {
-            return base.items.Where(item => item.Id == id).First(); 
+            try
+            {
+                return base.items.Where(item => item.Id == id).First(); 
+            } 
+            catch
+            {
+                return null;
+            }
         }
     }
 }

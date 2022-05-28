@@ -17,8 +17,9 @@ namespace server
         {
             var usersDb = new UsersDatabase("user-db.txt");
             var postsDb = new PostsDatabase("posts.txt");
+            var friendshipDb = new FriendshipDatabase("friendships.txt");
             var logger = new Logger();
-            var server = new Server(usersDb, postsDb, logger);
+            var server = new Server(usersDb, postsDb, friendshipDb, logger);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

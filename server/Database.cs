@@ -70,10 +70,12 @@ namespace server
             return updateCount;
         }
 
-        protected void RemoveItem(Func<T, bool> comparator)
+        protected bool RemoveItem(Func<T, bool> comparator)
         {
+            var oldLength = items.ToString().Length;
             items = items.Where(friendship => !comparator(friendship)).ToList();
             WriteToFile();
+            return oldLength > items.ToArray().Length;
         }
 
         public void Dispose()

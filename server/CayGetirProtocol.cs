@@ -47,27 +47,58 @@ namespace server
             return str;
         }
 
-        public static string RequestPosts(string username)
+        public static string RequestPosts()
         {
-            return $"Cay Getir 1.0\ntype=request_posts\nusername={username}";
+            return $"Cay Getir 1.0\ntype=request_posts";
         }
+
         public static string RequestMyPosts()
         {
             return $"Cay Getir 1.0\ntype=request_my_posts";
         }
+
+        public static string RequestFriends()
+        {
+            return $"Cay Getir 1.0\ntype=request_friends";
+        }
+
         public static string RequestMyArchive()
         {
             return $"Cay Getir 1.0\ntype=request_my_archive";
         }
 
-        public static string DeletePost(int id, string username)
+        public static string DeletePost(int id)
         {
-            return $"Cay Getir 1.0\ntype =delete_post\nid={id.ToString()}\nusername={username}";
+            return $"Cay Getir 1.0\ntype=delete_post\nid={id.ToString()}";
         }
+
         public static string ActivatePost(int id)
         {
             return $"Cay Getir 1.0\ntype=activate_post\nid={id.ToString()}";
         }
+
+        public static string AddFriend(string friend)
+        {
+            return $"Cay Getir 1.0\ntype=add_friend\nfriend={friend}";
+        }
+
+        public static string RemoveFriend(string friend)
+        {
+            return $"Cay Getir 1.0\ntype=remove_friend\nfriend={friend}";
+        }
+
+        public static string Friends(IEnumerable<string> friends)
+        {
+            var str = $"Cay Getir 1.0\ntype=friends\n";
+
+            foreach (var friend in friends)
+            {
+                str += $"username={friend}\n";
+            }
+
+            return str;
+        }
+
         public static MessageType DetermineType(string message)
         {
             var lines = message.Split(new char[] { '\n' });
@@ -107,22 +138,47 @@ namespace server
             {
                 return MessageType.RequestPosts;
             }
+
+            if (type == "request_friends")
+            {
+                return MessageType.RequestFriends;
+            }
+
             if (type == "delete_post")
             {
                 return MessageType.DeletePost;
             }
+
             if (type == "activate_post")
             {
                 return MessageType.ActivatePost;
             }
+
             if (type == "request_my_posts")
             {
                 return MessageType.RequestMyPosts;
             }
+
             if (type == "request_my_archive")
             {
                 return MessageType.RequestMyArchive;
             }
+            
+            if (type == "friends")
+            {
+                return MessageType.Friends;
+            }
+
+            if (type == "add_friend")
+            {
+                return MessageType.AddFriend;
+            }
+
+            if (type == "remove_friend")
+            {
+                return MessageType.RemoveFriend;
+            }
+
 
             return MessageType.Message;
         }
@@ -187,14 +243,14 @@ namespace server
             {
                 try
                 {
-                    var re = new Regex("id=(.*)&username=(.*)&body=(.*)&timestamp=(.*)");
+                    var re = new Regex(@"id=(.*)&username=(.*)&timestamp=(.*)&body=([\S\s]*)");
                     var groups = re.Matches(line);
                     var post = new Post
                     {
                         Id = Int32.Parse(groups[0].Groups[1].Value),
                         Username = groups[0].Groups[2].Value,
-                        Body = groups[0].Groups[3].Value,
-                        CreatedAt = DateTime.Parse(groups[0].Groups[4].Value),
+                        CreatedAt = DateTime.Parse(groups[0].Groups[3].Value),
+                        Body = groups[0].Groups[4].Value,
                     };
 
                     posts.Add(post);
@@ -207,11 +263,50 @@ namespace server
 
             return posts;
         }
+
         public static int ParsePostActionRequest(string message)
         {
             var lines = message.Split(new char[] { '\n' });
             var id = Int32.Parse(lines[2].Substring(3));
             return id;
+        }
+
+        public static IEnumerable<string> ParseFriends(string message)
+        {
+            var lines = message.Split(new char[] { '\n' });
+            var friends = new List<string> { };
+
+            foreach (var line in lines.Skip(2))
+            {
+                try
+                {
+                    var re = new Regex(@"username=(.*)");
+                    var groups = re.Matches(line);
+                    friends.Add(groups[0].Groups[1].Value);
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    continue;
+                }
+            }
+
+            return friends;
+        }
+
+        public static string ParseAddFriend(string message)
+        {
+            var re = new Regex(@"Cay Getir 1.0\ntype=add_friend\nfriend=(.*)");
+            var groups = re.Matches(message);
+
+            return groups[0].Groups[1].Value;
+        }
+
+        public static string ParseRemoveFriend(string message)
+        {
+            var re = new Regex(@"Cay Getir 1.0\ntype=remove_friend\nfriend=(.*)");
+            var groups = re.Matches(message);
+
+            return groups[0].Groups[1].Value;
         }
     }
 
@@ -226,8 +321,11 @@ namespace server
         RequestPosts,
         RequestMyPosts,
         RequestMyArchive,
+        RequestFriends,
+        ActivatePost,
         DeletePost,
-        ActivatePost
-        
+        Friends,
+        AddFriend,
+        RemoveFriend,
     }
 }

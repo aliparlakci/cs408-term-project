@@ -58,6 +58,15 @@ namespace client
             {
                 postContentBox.Text = "";
             });
+
+            _client.OnSetFriends(friends =>
+            {
+                friendsListBox.Items.Clear();
+                foreach (var friend in friends)
+                {
+                    friendsListBox.Items.Add(friend);
+                }
+            });
         }
 
         private void ClearInputs()
@@ -156,6 +165,17 @@ namespace client
                 _logger.Write("Post ID must be integer!\n");
 
             }
+        }
+
+        private void removeFriendButton_Click(object sender, EventArgs e)
+        {
+            _client.RemoveFriend(friendsListBox.SelectedItem.ToString());
+        }
+
+        private void addFriend_Click(object sender, EventArgs e)
+        {
+            _client.AddFriend(addFriendInput.Text);
+            addFriendInput.Text = "";
         }
     }
 }
