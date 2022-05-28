@@ -41,7 +41,6 @@ namespace client
 
             _client.OnConnect(() =>
             {
-                userNameInput.Text = "";
                 connectBox.Enabled = false;
                 disconnectButton.Enabled = true;
                 tabControl1.Enabled = true;
@@ -71,10 +70,7 @@ namespace client
 
         private void ClearInputs()
         {
-            //nameInput.Clear();
-            //surnameInput.Clear();
             userNameInput.Clear();
-            //passwordInput.Clear();
         }
 
         private bool VerifyInputs()
@@ -96,6 +92,13 @@ namespace client
 
             string ip = ipInput.Text;
             int serverPort;
+
+            if (ip == "")
+            {
+                _logger.Write("IP cannot be empty!\n");
+                connectBox.Enabled = true;
+                return;
+            }
 
             if (Int32.TryParse(portInput.Text, out serverPort))
             {
@@ -135,6 +138,7 @@ namespace client
             if (Int32.TryParse(deletePostInput.Text, out id))
             {
                 _client.DeletePost(id);
+                deletePostInput.Text = "";
             }
             else
             {
@@ -159,6 +163,7 @@ namespace client
             if (Int32.TryParse(activatePostInput.Text, out id))
             {
                 _client.ActivatePost(id);
+                activatePostInput.Text = "";
             }
             else
             {

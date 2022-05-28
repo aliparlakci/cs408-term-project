@@ -151,10 +151,10 @@
             this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.logBox.Location = new System.Drawing.Point(422, 12);
+            this.logBox.Location = new System.Drawing.Point(362, 12);
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
-            this.logBox.Size = new System.Drawing.Size(606, 468);
+            this.logBox.Size = new System.Drawing.Size(316, 468);
             this.logBox.TabIndex = 2;
             this.logBox.Text = "";
             // 
@@ -162,7 +162,7 @@
             // 
             this.disconnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.disconnectButton.Enabled = false;
-            this.disconnectButton.Location = new System.Drawing.Point(953, 486);
+            this.disconnectButton.Location = new System.Drawing.Point(603, 486);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(75, 23);
             this.disconnectButton.TabIndex = 3;
@@ -177,7 +177,7 @@
             this.newPostBox.Controls.Add(this.label3);
             this.newPostBox.Location = new System.Drawing.Point(6, 6);
             this.newPostBox.Name = "newPostBox";
-            this.newPostBox.Size = new System.Drawing.Size(384, 118);
+            this.newPostBox.Size = new System.Drawing.Size(324, 118);
             this.newPostBox.TabIndex = 1;
             this.newPostBox.TabStop = false;
             this.newPostBox.Text = "Create Post";
@@ -186,13 +186,13 @@
             // 
             this.postContentBox.Location = new System.Drawing.Point(76, 19);
             this.postContentBox.Name = "postContentBox";
-            this.postContentBox.Size = new System.Drawing.Size(300, 55);
+            this.postContentBox.Size = new System.Drawing.Size(242, 55);
             this.postContentBox.TabIndex = 4;
             this.postContentBox.Text = "";
             // 
             // sendPostButton
             // 
-            this.sendPostButton.Location = new System.Drawing.Point(292, 80);
+            this.sendPostButton.Location = new System.Drawing.Point(234, 80);
             this.sendPostButton.Name = "sendPostButton";
             this.sendPostButton.Size = new System.Drawing.Size(84, 23);
             this.sendPostButton.TabIndex = 2;
@@ -212,9 +212,9 @@
             // 
             // requestPostButton
             // 
-            this.requestPostButton.Location = new System.Drawing.Point(23, 31);
+            this.requestPostButton.Location = new System.Drawing.Point(24, 43);
             this.requestPostButton.Name = "requestPostButton";
-            this.requestPostButton.Size = new System.Drawing.Size(350, 52);
+            this.requestPostButton.Size = new System.Drawing.Size(291, 52);
             this.requestPostButton.TabIndex = 4;
             this.requestPostButton.Text = "All Posts";
             this.requestPostButton.UseVisualStyleBackColor = true;
@@ -227,14 +227,14 @@
             this.deletePostBox.Controls.Add(this.label4);
             this.deletePostBox.Location = new System.Drawing.Point(6, 129);
             this.deletePostBox.Name = "deletePostBox";
-            this.deletePostBox.Size = new System.Drawing.Size(384, 84);
+            this.deletePostBox.Size = new System.Drawing.Size(324, 84);
             this.deletePostBox.TabIndex = 2;
             this.deletePostBox.TabStop = false;
             this.deletePostBox.Text = "Delete Post";
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(292, 50);
+            this.deleteButton.Location = new System.Drawing.Point(234, 49);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(84, 23);
             this.deleteButton.TabIndex = 2;
@@ -246,7 +246,7 @@
             // 
             this.deletePostInput.Location = new System.Drawing.Point(76, 23);
             this.deletePostInput.Name = "deletePostInput";
-            this.deletePostInput.Size = new System.Drawing.Size(300, 20);
+            this.deletePostInput.Size = new System.Drawing.Size(242, 20);
             this.deletePostInput.TabIndex = 1;
             // 
             // label4
@@ -267,14 +267,14 @@
             this.friends.Location = new System.Drawing.Point(4, 22);
             this.friends.Name = "friends";
             this.friends.Padding = new System.Windows.Forms.Padding(3);
-            this.friends.Size = new System.Drawing.Size(396, 303);
+            this.friends.Size = new System.Drawing.Size(336, 303);
             this.friends.TabIndex = 1;
             this.friends.Text = "Friends";
             this.friends.UseVisualStyleBackColor = true;
             // 
             // addFriend
             // 
-            this.addFriend.Location = new System.Drawing.Point(226, 63);
+            this.addFriend.Location = new System.Drawing.Point(186, 63);
             this.addFriend.Name = "addFriend";
             this.addFriend.Size = new System.Drawing.Size(135, 23);
             this.addFriend.TabIndex = 3;
@@ -284,7 +284,7 @@
             // 
             // addFriendInput
             // 
-            this.addFriendInput.Location = new System.Drawing.Point(226, 37);
+            this.addFriendInput.Location = new System.Drawing.Point(186, 37);
             this.addFriendInput.Name = "addFriendInput";
             this.addFriendInput.Size = new System.Drawing.Size(135, 20);
             this.addFriendInput.TabIndex = 2;
@@ -315,7 +315,7 @@
             this.posts.Location = new System.Drawing.Point(4, 22);
             this.posts.Name = "posts";
             this.posts.Padding = new System.Windows.Forms.Padding(3);
-            this.posts.Size = new System.Drawing.Size(396, 303);
+            this.posts.Size = new System.Drawing.Size(336, 303);
             this.posts.TabIndex = 0;
             this.posts.Text = "Posts";
             this.posts.UseVisualStyleBackColor = true;
@@ -327,14 +327,14 @@
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Location = new System.Drawing.Point(6, 219);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(384, 84);
+            this.groupBox1.Size = new System.Drawing.Size(324, 78);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Activate Post";
             // 
             // Activate
             // 
-            this.Activate.Location = new System.Drawing.Point(292, 50);
+            this.Activate.Location = new System.Drawing.Point(234, 49);
             this.Activate.Name = "Activate";
             this.Activate.Size = new System.Drawing.Size(84, 23);
             this.Activate.TabIndex = 2;
@@ -346,7 +346,7 @@
             // 
             this.activatePostInput.Location = new System.Drawing.Point(76, 23);
             this.activatePostInput.Name = "activatePostInput";
-            this.activatePostInput.Size = new System.Drawing.Size(300, 20);
+            this.activatePostInput.Size = new System.Drawing.Size(242, 20);
             this.activatePostInput.TabIndex = 1;
             // 
             // label6
@@ -367,7 +367,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 151);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(404, 329);
+            this.tabControl1.Size = new System.Drawing.Size(344, 329);
             this.tabControl1.TabIndex = 4;
             // 
             // feed
@@ -378,16 +378,16 @@
             this.feed.Controls.Add(this.requestPostButton);
             this.feed.Location = new System.Drawing.Point(4, 22);
             this.feed.Name = "feed";
-            this.feed.Size = new System.Drawing.Size(396, 303);
+            this.feed.Size = new System.Drawing.Size(336, 303);
             this.feed.TabIndex = 2;
             this.feed.Text = "Feed";
             this.feed.UseVisualStyleBackColor = true;
             // 
             // archiveButton
             // 
-            this.archiveButton.Location = new System.Drawing.Point(23, 205);
+            this.archiveButton.Location = new System.Drawing.Point(24, 217);
             this.archiveButton.Name = "archiveButton";
-            this.archiveButton.Size = new System.Drawing.Size(350, 52);
+            this.archiveButton.Size = new System.Drawing.Size(291, 52);
             this.archiveButton.TabIndex = 7;
             this.archiveButton.Text = "My Archive";
             this.archiveButton.UseVisualStyleBackColor = true;
@@ -395,9 +395,9 @@
             // 
             // myPostsButton
             // 
-            this.myPostsButton.Location = new System.Drawing.Point(23, 147);
+            this.myPostsButton.Location = new System.Drawing.Point(24, 159);
             this.myPostsButton.Name = "myPostsButton";
-            this.myPostsButton.Size = new System.Drawing.Size(350, 52);
+            this.myPostsButton.Size = new System.Drawing.Size(291, 52);
             this.myPostsButton.TabIndex = 6;
             this.myPostsButton.Text = "My Posts";
             this.myPostsButton.UseVisualStyleBackColor = true;
@@ -405,9 +405,9 @@
             // 
             // friendsPostsButton
             // 
-            this.friendsPostsButton.Location = new System.Drawing.Point(23, 89);
+            this.friendsPostsButton.Location = new System.Drawing.Point(24, 101);
             this.friendsPostsButton.Name = "friendsPostsButton";
-            this.friendsPostsButton.Size = new System.Drawing.Size(350, 52);
+            this.friendsPostsButton.Size = new System.Drawing.Size(291, 52);
             this.friendsPostsButton.TabIndex = 5;
             this.friendsPostsButton.Text = "Friends\' Posts";
             this.friendsPostsButton.UseVisualStyleBackColor = true;
@@ -417,7 +417,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1040, 521);
+            this.ClientSize = new System.Drawing.Size(690, 521);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.logBox);
