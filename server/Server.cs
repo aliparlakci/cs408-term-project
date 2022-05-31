@@ -87,7 +87,7 @@ namespace server
                         if (!_userDb.Exists((item) => item == username))
                         {
                             _logger.Write($"{username} tried to connect to the server but cannot\n");
-                            var response = CayGetirProtocol.Error("Please enter a valid username!");
+                            var response = CayGetirProtocol.Message("Please enter a valid username!");
                             Send(newClient, response);
 
                             newClient.Close();
@@ -95,7 +95,7 @@ namespace server
                         else if (clients.Any(client => client.Username == username))
                         {
                             _logger.Write($"{username} tried to connect again!\n");
-                            var response = CayGetirProtocol.Error($"Hey {username}, you have already connected");
+                            var response = CayGetirProtocol.Message($"Hey {username}, you have already connected");
                             Send(newClient, response);
                             newClient.Close();
                         }
@@ -174,6 +174,7 @@ namespace server
             {
                 var payload = CayGetirProtocol.ParseMessage(message);
             }
+
             else if (type == MessageType.NewPost)
             {
                 var post = CayGetirProtocol.ParseNewPost(message);
@@ -214,16 +215,19 @@ namespace server
                 var deleteRequestId = CayGetirProtocol.ParsePostActionRequest(message);
                 DeletePost(client, deleteRequestId);
             }
+
             else if (type == MessageType.ActivatePost)
             {
                 var deleteRequestId = CayGetirProtocol.ParsePostActionRequest(message);
                 ActivatePost(client, deleteRequestId);
             }
+
             else if (type == MessageType.RequestFriends)
             {
                 var friends = _friendshipDb.GetFriendsOf(client.Username);
                 Send(client.Socket, CayGetirProtocol.Friends(friends));
             }
+
             else if (type == MessageType.AddFriend)
             {
                 var username = CayGetirProtocol.ParseAddFriend(message);
@@ -238,6 +242,13 @@ namespace server
 
         private void AddFriend(Client client, string username)
         {
+            if (client.Username == username)
+            {
+                Send(client.Socket, CayGetirProtocol.Message($"You cannot add yourself as a friend"));
+                _logger.Write($"{client.Username} tried to add themselves as friend\n");
+                return;
+            }
+
             if (!_userDb.Exists(user => user == username))
             {
                 Send(client.Socket, CayGetirProtocol.Message($"Person with username {username} does not exists"));
@@ -257,6 +268,7 @@ namespace server
                 _logger.Write($"{client.Username} tried to add {username} as their friend but {username} is already their friend!\n");
             }
             BroadcastFriendsList();
+            NotifyUserAddFriend(username, client.Username);
         }
 
         private void RemoveFriend(Client client, string username)
@@ -273,6 +285,30 @@ namespace server
                 _logger.Write($"{client.Username} tried to unfriend {username} but {username} is not their friend!\n");
             }
             BroadcastFriendsList();
+            NotifyUserUnfriend(username, client.Username);
+        }
+
+        private void NotifyUserUnfriend(string username, string requester)
+        {
+            foreach (var client in clients)
+            {
+                if (client.Username == username)
+                {
+                    Send(client.Socket, CayGetirProtocol.Message($"{requester} removed you from their friends."));
+                    return;
+                }
+            }
+        }
+        private void NotifyUserAddFriend(string username, string requester)
+        {
+            foreach (var client in clients)
+            {
+                if (client.Username == username)
+                {
+                    Send(client.Socket, CayGetirProtocol.Message($"{requester} added you to their friends."));
+                    return;
+                }
+            }
         }
 
         private void DeletePost(Client client, int deleteRequestId)
