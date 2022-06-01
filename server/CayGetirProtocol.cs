@@ -12,7 +12,7 @@ namespace server
     {
         public static string Message(string message)
         {
-            return $"Cay Getir 1.0\ntype=message\nmessage={message}";
+            return $"Cay Getir 1.0\ntype=message\nmessage=\n{message}";
         }
 
         public static string Error(string message)
@@ -217,7 +217,9 @@ namespace server
         {
             var lines = message.Split(new char[] { '\n' });
 
-            return lines[2].Substring(8);
+            var re = new Regex(@"Cay Getir 1.0\ntype=message\nmessage=([\S\s]*)");
+            var groups = re.Matches(message);
+            return groups[0].Groups[1].Value;
         }
 
         public static string ParseError(string message)
